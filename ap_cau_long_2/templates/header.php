@@ -1,0 +1,62 @@
+<!-- templates/header.php -->
+<header class="banner-main">
+  <div class="logo-wrapper">
+    <img src="/ap_cau_long/anh/Logo.jpg" alt="Logo CauLongVN" />
+    <div class="logo-text-below">CauLongVN</div>
+  </div>
+
+  <div class="logo-text-side">
+    Chuyên dụng cụ cầu lông chính hãng
+  </div>
+
+  <nav class="main-menu">
+    <ul>
+      <li><a href="/ap_cau_long/caulongvn.php">Trang chủ</a></li>
+      <li class="has-submenu">
+        <a href="#">Sản phẩm ▾</a>
+        <ul class="submenu">
+          <li><a href="/ap_cau_long/templates/sanpham/giay-cau-long.php">Giày</a></li>
+          <li><a href="/ap_cau_long/templates/sanpham/ao-cau-long.php">Áo</a></li>
+          <li><a href="/ap_cau_long/templates/sanpham/vot-cau-long.php">Vợt</a></li>
+          <li><a href="/ap_cau_long/templates/sanpham/tui-cau-long.php">Túi</a></li>
+        </ul>
+      </li>
+      <li class="has-submenu">
+        <a href="#">Hướng dẫn ▾</a>
+        <ul class="submenu">
+          <li><a href="/ap_cau_long/templates/footer/huong-dan-mua-hang.php">Hướng dẫn mua hàng</a></li>
+          <li><a href="/ap_cau_long/templates/footer/huong-dan-chon-vot-giay.php">Hướng dẫn chọn giày và vợt</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+    <div class="search-cart">
+    <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm..." />
+    <button id="search-btn">Tìm</button>
+    <button class="btn-cart" onclick="window.location.href='/ap_cau_long/templates/header/giohang.php'">
+      <img src="/ap_cau_long/anh/giohang.jpg" alt="Giỏ hàng" class="icon-cart" />
+      Giỏ hàng
+    </button>
+
+    </div>
+
+<script>
+  // Khi bấm nút Tìm, chuyển trang tới trang tìm kiếm với tham số query từ input
+  document.getElementById('search-btn').addEventListener('click', function() {
+    const query = document.getElementById('search-input').value.trim();
+    if(query) {
+      window.location.href = '/ap_cau_long/templates/header/timkiem.php?q=' + encodeURIComponent(query);
+    }
+  });
+
+  // Nếu muốn bấm Enter trong ô input cũng tìm kiếm
+  document.getElementById('search-input').addEventListener('keypress', function(e) {
+    if(e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('search-btn').click();
+    }
+  });
+</script>
+</header>
+
