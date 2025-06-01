@@ -1,0 +1,92 @@
+<main class="member-editpage">
+  <section class="editcard">
+    <aside class="editcard-left">
+      <div class="edit-avatar-wrap">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar" class="edit-avatar" />
+        <div class="edit-avatar-btn">
+          <label for="avatar-upload" title="Đổi ảnh đại diện">
+            <i class="ri-camera-line"></i>
+          </label>
+          <input type="file" id="avatar-upload" style="display:none;">
+        </div>
+      </div>
+      <div class="edit-actions">
+        <button type="button" class="edit-btn action" id="btn-change-password">
+          <i class="ri-lock-password-line"></i> Đổi mật khẩu
+        </button>
+        <button type="button" class="edit-btn action" id="btn-change-phone">
+          <i class="ri-phone-line"></i> Đổi số điện thoại
+        </button>
+        <button type="button" class="edit-btn action" id="btn-change-email">
+          <i class="ri-mail-line"></i> Đổi email
+        </button>
+      </div>
+    </aside>
+    <form class="edit-form" autocomplete="off">
+      <h2 class="edit-title">Chỉnh sửa thông tin</h2>
+      <div class="edit-group">
+        <label for="fullname">
+          <span class="edit-icon"><i class="ri-user-3-line"></i></span>
+          Họ và tên
+        </label>
+        <input type="text" id="fullname" name="fullname" value="Nguyễn Văn A" required>
+      </div>
+      <div class="edit-group">
+        <label>
+          <span class="edit-icon"><i class="ri-user-heart-line"></i></span>
+          Giới tính
+        </label>
+        <div class="edit-gender">
+          <label class="edit-radio">
+            <input type="radio" name="gender" value="male" checked>
+            <span>Nam</span>
+          </label>
+          <label class="edit-radio">
+            <input type="radio" name="gender" value="female">
+            <span>Nữ</span>
+          </label>
+          <label class="edit-radio">
+            <input type="radio" name="gender" value="other">
+            <span>Khác</span>
+          </label>
+        </div>
+      </div>
+      <div class="edit-group">
+        <label for="birthday">
+          <span class="edit-icon"><i class="ri-calendar-line"></i></span>
+          Ngày sinh
+        </label>
+        <input type="date" id="birthday" name="birthday" value="1995-01-01">
+      </div>
+      <div class="edit-group">
+        <label for="address">
+          <span class="edit-icon"><i class="ri-map-pin-line"></i></span>
+          Địa chỉ
+        </label>
+        <input type="text" id="address" name="address" value="390/2 Hà Huy Giáp, Q.12, TP.HCM">
+      </div>
+      <div class="edit-actions-row">
+        <button type="submit" class="edit-btn save">
+          <i class="ri-save-3-line"></i> Lưu thay đổi
+        </button>
+        <button type="button" class="edit-btn cancel" id="btn-cancel-edit">
+          <i class="ri-arrow-go-back-line"></i> Hủy
+        </button>
+      </div>
+    </form>
+    <div class="edit-stats">
+      <a href="#" class="edit-stat-btn">
+        <div class="stat-title">Điểm thưởng</div>
+        <div class="stat-value">1,250</div>
+      </a>
+      <a href="#" class="edit-stat-btn">
+        <div class="stat-title">Đơn hàng</div>
+        <div class="stat-value">8</div>
+      </a>
+      <a href="#" class="edit-stat-btn">
+        <div class="stat-title">Hạng</div>
+        <div class="stat-value">Gold</div>
+      </a>
+    </div>
+  </section>
+</main>
