@@ -1,0 +1,77 @@
+/* Footer */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+footer {
+  background: #222;
+  color: #eee;
+  padding: 40px 20px 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: auto; /* Căn giữa footer nếu nó có chiều rộng cố định */
+
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: space-between !important;
+  text-align: left !important;
+}
+
+footer .policy,
+footer .info,
+footer .contact {
+  flex: 1 1 300px !important; /* Mỗi cột chiếm ít nhất 300px và co giãn */
+  text-align: left !important;
+  padding: 0 15px; /* Thêm padding ngang cho các cột */
+  display: block;
+}
+
+footer h3 {
+  margin-bottom: 15px;
+  color: #00bfa5;
+  font-size: 18px;
+}
+
+footer p {
+  margin-bottom: 10px;
+}
+
+/* CHỈNH SỬA CHO CHÍNH SÁCH & HƯỚNG DẪN - Đã tối ưu với CSS Reset */
+footer .policy ul.footer-links {
+  list-style-type: disc; /* Giữ dấu chấm tròn */
+  list-style-position: inside; /* Đẩy dấu chấm vào bên trong dòng chữ để căn sát lề */
+  /* Không cần padding-left: 0; hay margin: 0; ở đây nữa nếu đã có CSS Reset */
+  text-align: left; /* Đảm bảo văn bản căn trái */
+}
+
+footer .policy ul.footer-links li {
+  /* Không cần padding: 0; hay margin: 0; ở đây nữa nếu đã có CSS Reset */
+  display: list-item;
+  text-align: left;
+  margin-bottom: 6px; /* Giữ khoảng cách giữa các mục */
+}
+
+footer .policy ul.footer-links li a,
+.footer-links a {
+  color: #eee;
+  text-decoration: none;
+  display: inline;
+}
+
+footer .policy ul.footer-links li a:hover,
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+footer .bottom {
+  display: block; /* Đặt là block để chiếm toàn bộ chiều rộng và nằm riêng một dòng */
+  width: 100%; /* Đảm bảo chiếm 100% chiều rộng của footer */
+  margin: 20px auto 0; /* margin-top 20px, căn giữa theo chiều ngang */
+  padding: 10px 20px;
+  background: #111;
+  color: #aaa;
+  font-size: 13px;
+  text-align: center;
+}

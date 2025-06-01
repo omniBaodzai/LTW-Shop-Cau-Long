@@ -1,0 +1,83 @@
+.banner-sub .product {
+  flex: 1 1 200px;
+  max-width: 200px;
+  background: rgba(255 255 255 / 0.08);
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 300px;
+  transition: background-color 0.3s ease;
+}
+
+.banner-sub .product:hover {
+  background: rgba(255 255 255 / 0.15);
+}
+
+.banner-sub .product img {
+  max-width: 100%;
+  max-height: 120px;
+  object-fit: contain;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  box-shadow: 0 3px 4px rgba(0,0,0,0.25);
+  background: #fff;
+  padding: 6px;
+}
+
+.banner-sub .product h2 {
+  font-size: 1rem;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.banner-sub .product p {
+  font-size: 0.9rem;
+  line-height: 1.2;
+  max-width: 180px;
+  margin: 0 auto;
+  flex-grow: 1;
+}
+.slideshow-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.slide {
+  position: relative;
+  max-width: 1000px;
+  margin: 20px auto;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background: #fff;
+  display: none;
+  text-align: center;
+  padding: 20px;
+}
+
+.slide img {
+  width: 100%;
+  height: 300px;
+  object-fit: fill;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.slide h2 {
+  font-size: 1.5rem;
+  color: #004d40;
+  margin-bottom: 10px;
+}
+
+.slide p {
+  font-size: 1rem;
+  color: #333;
+  max-width: 700px;
+  margin: 0 auto;
+}
