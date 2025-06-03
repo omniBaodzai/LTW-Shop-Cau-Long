@@ -2573,3 +2573,821 @@ width: max-content; */
     padding: 6px 8px;
   }
 }
+
+/* Đổi mật khẩu */
+.change-password-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0e7ff 60%, #f8fafc 100%);
+  padding: 48px 0 64px 0;
+}
+
+.change-password-card {
+  background: #fff;
+  border-radius: 28px;
+  box-shadow: 0 8px 32px rgba(59, 53, 86, 0.13), 0 1.5px 0 #e63946;
+  padding: 38px 38px 32px 38px;
+  max-width: 420px;
+  width: 100%;
+  animation: fadeInUp 0.8s cubic-bezier(.4,0,.2,1);
+}
+
+.change-password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.change-password-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #1d3557;
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.change-password-title i {
+  color: #e63946;
+  font-size: 1.5rem;
+}
+
+.change-password-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.change-password-group label {
+  color: #e63946;
+  font-weight: 700;
+  font-size: 1.08rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.1px;
+  margin-bottom: 2px;
+  transition: color 0.2s;
+}
+.change-password-group label i {
+  color: #e63946;
+  font-size: 1.18rem;
+  margin-bottom: 1px;
+}
+.change-password-group input[type="password"] {
+  background: #fff;
+  border: 1.5px solid #e0e7ef;
+  border-radius: 8px;
+  color: #1d3557;
+  padding: 10px 14px;
+  font-size: 1.05rem;
+  box-shadow: none;
+  margin-bottom: 0;
+  transition: border 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.change-password-group input[type="password"]:focus {
+  border: 1.5px solid #e63946;
+  box-shadow: 0 2px 8px rgba(230,57,70,0.10);
+  background: #fff;
+}
+
+.change-password-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 18px;
+  justify-content: center;
+}
+.change-btn {
+  padding: 10px 28px;
+  border-radius: 22px;
+  border: none;
+  font-weight: 700;
+  font-size: 1.08rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(29,53,87,0.10);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.change-btn.save {
+  background: linear-gradient(90deg, #1d3557 0%, #ffd166 100%);
+  color: #fff;
+}
+.change-btn.save:hover {
+  background: linear-gradient(90deg, #ffd166 0%, #1d3557 100%);
+  color: #fff;
+  transform: translateY(-2px) scale(1.04);
+}
+.change-btn.cancel {
+  background: linear-gradient(90deg, #e63946 0%, #ff7f2a 100%);
+  color: #fff;
+}
+.change-btn.cancel:hover {
+  background: linear-gradient(90deg, #ff7f2a 0%, #e63946 100%);
+  color: #fff;
+  transform: translateY(-2px) scale(1.04);
+}
+.change-btn i {
+  font-size: 1.15rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .change-password-card {
+    padding: 14px 2vw 10px 2vw;
+    border-radius: 12px;
+  }
+  .change-password-title {
+    font-size: 1rem;
+  }
+  .change-password-group label {
+    font-size: 0.93rem;
+  }
+  .change-password-group input {
+    font-size: 0.93rem;
+    padding: 7px 6px;
+  }
+  .change-btn {
+    font-size: 0.93rem;
+    padding: 6px 8px;
+  }
+}
+
+
+/* Đổi số điện thoại */
+/* Style riêng cho trang đổi số điện thoại */
+.change-phone-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0e7ff 60%, #f8fafc 100%);
+  padding: 48px 0 64px 0;
+}
+
+.change-phone-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(59, 53, 86, 0.13), 0 1.5px 0 #0099e6;
+  padding: 22px 38px 18px 38px;
+ max-width: 540px;
+  min-width: 340px;
+  animation: fadeInUp 0.8s cubic-bezier(.4,0,.2,1);
+}
+
+.change-phone-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1d3557;
+  margin-bottom: 15px;
+  letter-spacing: 0.5px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+    text-align: center; /* Thêm dòng này để căn giữa */
+  justify-content: center;
+}
+.change-phone-title i {
+  color: #0099e6;
+  font-size: 1.7rem;
+}
+
+.change-phone-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.change-phone-emailbox {
+  display: flex;
+  align-items: center;
+  border: 2px solid #0099e6;
+  border-radius: 10px;
+  background: #f8fafc;
+  margin-bottom: 15px;
+  padding: 10px 18px;
+  gap: 0;
+  position: relative;
+  box-shadow: 0 2px 12px rgba(0,153,230,0.06);
+  transition: box-shadow 0.22s, border 0.22s;
+}
+.change-phone-emailbox:hover {
+  box-shadow: 0 6px 24px rgba(0,153,230,0.13);
+  border-color: #005bea;
+}
+
+.change-phone-emailiconbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 18px;
+  margin-left: 0;
+  flex-shrink: 0;
+}
+.change-phone-emailiconbox i {
+  background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+  color: #fff;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 1.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,198,251,0.10);
+  transition: filter 0.18s;
+}
+.change-phone-emailbox:hover .change-phone-emailiconbox i {
+  filter: brightness(1.15);
+}
+
+.change-phone-emailcontent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  gap: 2px;
+}
+.change-phone-emailtitle {
+  font-weight: 700;
+  color: #22223b;
+  font-size: 1.13rem;
+}
+.change-phone-emailvalue {
+  color: #0099e6;
+  font-size: 1.04rem;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.change-phone-emailcheck {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 18px;
+  flex-shrink: 0;
+}
+.change-phone-emailcheck i {
+  color: #fff;
+  background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,153,230,0.10);
+  border: 2px solid #fff;
+  transition: background 0.18s, color 0.18s;
+}
+.change-phone-emailbox:hover .change-phone-emailcheck i {
+  background: linear-gradient(135deg, #005bea 0%, #00c6fb 100%);
+  color: #fff;
+}
+
+.change-phone-btn.get-code {
+  width: 100%;
+  background: linear-gradient(90deg, #00c6fb 0%, #005bea 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.13rem;
+  border: none;
+  border-radius: 12px;
+  padding: 13px 0;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(0,198,251,0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background 0.2s, transform 0.18s, box-shadow 0.18s, filter 0.18s;
+  cursor: pointer;
+}
+.change-phone-btn.get-code:hover {
+  background: linear-gradient(90deg, #005bea 0%, #00c6fb 100%);
+  color: #fff;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 18px rgba(0,198,251,0.18);
+  filter: brightness(1.08);
+}
+
+.change-phone-label {
+  color: #22223b;
+  font-weight: 700;
+  font-size: 1.13rem;
+  margin-bottom: 2px;
+}
+
+.change-phone-codebox {
+  display: flex;
+  gap: 12px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.change-phone-code {
+  width: 44px;
+  height: 48px;
+  border: 1.5px solid #e0e7ef;
+  border-radius: 8px;
+  font-size: 1.35rem;
+  color: #1d3557;
+  text-align: center;
+  font-weight: 700;
+  background: #fff;
+  transition: border 0.2s, box-shadow 0.2s;
+  outline: none;
+  box-shadow: 0 1px 4px rgba(0,153,230,0.06);
+}
+.change-phone-code:focus {
+  border: 1.5px solid #0099e6;
+  box-shadow: 0 2px 8px rgba(0,198,251,0.10);
+  background: #fff;
+}
+
+.change-phone-inputicon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1.5px solid #e0e7ef;
+  padding: 0 12px;
+  transition: border 0.18s;
+}
+.change-phone-inputicon:focus-within {
+  border: 1.5px solid #0099e6;
+}
+.change-phone-inputicon i {
+  color: #005bea;
+  font-size: 1.25rem;
+}
+.change-phone-inputicon input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1.13rem;
+  color: #1d3557;
+  padding: 13px 0;
+  width: 100%;
+}
+
+.change-phone-actions {
+  display: flex;
+  gap: 18px;
+  margin-top: 18px;
+  justify-content: center;
+}
+.change-phone-btn.confirm {
+  background: linear-gradient(90deg, #001a72 0%, #005bea 100%);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 13px 38px;
+  font-size: 1.13rem;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,26,114,0.10);
+  transition: background 0.2s, transform 0.2s, filter 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.change-phone-btn.confirm:hover {
+  background: linear-gradient(90deg, #005bea 0%, #001a72 100%);
+  color: #fff;
+  transform: translateY(-2px) scale(1.04);
+  filter: brightness(1.08);
+}
+.change-phone-btn.cancel {
+  background: linear-gradient(90deg, #e63946 0%, #ff7f2a 100%);
+  color: #fff;
+  border-radius: 12px;
+  padding: 13px 28px;
+  font-size: 1.13rem;
+  border: none;
+  box-shadow: 0 2px 8px rgba(230,57,70,0.10);
+  transition: background 0.2s, transform 0.2s, filter 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.change-phone-btn.cancel:hover {
+  background: linear-gradient(90deg, #ff7f2a 0%, #e63946 100%);
+  color: #fff;
+  transform: translateY(-2px) scale(1.04);
+  filter: brightness(1.08);
+}
+.change-phone-btn i {
+  font-size: 1.18rem;
+}
+
+/* Hiệu ứng xuất hiện */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .change-phone-card {
+    padding: 10px 1vw 8px 1vw;
+    border-radius: 12px;
+    max-width: 98vw;
+  }
+  .change-phone-title {
+    font-size: 1.08rem;
+  }
+  .change-phone-emailiconbox i {
+    width: 34px;
+    height: 34px;
+    font-size: 1.2rem;
+  }
+  .change-phone-code {
+    width: 32px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+  .change-phone-btn.confirm,
+  .change-phone-btn.cancel {
+    font-size: 0.97rem;
+    padding: 9px 10px;
+  }
+}
+.change-phone-emailcontent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.change-phone-emailvalue {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 320px; /* hoặc 60%, hoặc 100% tùy ý */
+}
+
+/* ==== Badminton Page New Layout ==== */
+.badminton-main {
+  background: #f8fafc;
+  min-height: 100vh;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  padding: 0;
+}
+.badminton-container {
+  width: 1260px;
+  margin: 0 auto;
+  padding: 0;
+}
+.badminton-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.08rem;
+  color: #888;
+  background: #fff;
+  padding: 18px 28px 13px 28px;
+  border-bottom: 2px solid #ff5722;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: 0 0 12px 12px;
+  margin-bottom: 0;
+}
+.badminton-breadcrumb a {
+  color: #ff5722;
+  text-decoration: none;
+  transition: color 0.18s;
+}
+.badminton-breadcrumb a:hover {
+  color: #005bea;
+  text-decoration: underline;
+}
+.breadcrumb-sep {
+  color: #bbb;
+  font-size: 1.1em;
+}
+
+.badminton-body {
+  display: flex;
+  gap: 32px;
+  margin-top: 24px;
+  align-items: flex-start; /* Thêm dòng này */
+}
+
+.badminton-sidebar {
+  width: 270px;
+  min-width: 220px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  padding: 24px 20px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: fadeInLeft 0.7s;
+}
+.filter-title {
+  font-size: 1.13rem;
+  font-weight: 800;
+  color: #ff5722;
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+.filter-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.filter-list label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.04rem;
+  color: #222;
+  cursor: pointer;
+  transition: color 0.18s;
+}
+.filter-list input[type="checkbox"] {
+  accent-color: #ff5722;
+  width: 18px;
+  height: 18px;
+  transition: box-shadow 0.18s;
+}
+.filter-list label:hover {
+  color: #005bea;
+}
+
+.badminton-content {
+  flex: 1;
+  min-width: 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  padding: 28px 28px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInUp 0.7s;
+}
+.badminton-content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  gap: 12px;
+}
+.badminton-content-header h1 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #1d3557;
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+.badminton-sort {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.08rem;
+  color: #222;
+  background: #f3f7fa;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(0,153,230,0.07);
+}
+.badminton-sort i {
+  color: #ff5722;
+  font-size: 1.2em;
+}
+.badminton-sort select {
+  border: none;
+  background: transparent;
+  font-size: 1.08rem;
+  color: #005bea;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  padding: 2px 0 2px 8px;
+  transition: color 0.18s;
+}
+.badminton-sort select:hover {
+  color: #ff5722;
+}
+
+.badminton-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px 22px;
+  margin-top: 10px;
+}
+.badminton-item {
+  background: linear-gradient(120deg, #f8fafc 80%, #e0f7fa 100%);
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0,153,230,0.09);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 22px 14px 18px 14px;
+  position: relative;
+  transition: box-shadow 0.22s, transform 0.18s, background 0.18s;
+  cursor: pointer;
+  overflow: hidden;
+  min-width: 0;
+}
+.badminton-item:hover {
+  box-shadow: 0 8px 32px rgba(0,153,230,0.18);
+  transform: translateY(-8px) scale(1.035);
+  background: linear-gradient(120deg, #fffbe7 70%, #ffe0b2 100%);
+}
+.badminton-imgbox {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  margin-bottom: 14px;
+}
+.badminton-imgbox img {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 8px rgba(0,153,230,0.10);
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.badminton-item:hover .badminton-imgbox img {
+  transform: scale(1.10) rotate(-2deg);
+  box-shadow: 0 6px 24px rgba(255,87,34,0.13);
+}
+.badminton-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: linear-gradient(90deg, #ff5722 60%, #ff9800 100%);
+  color: #fff;
+  font-size: 1.01rem;
+  font-weight: 700;
+  padding: 4px 16px 4px 12px;
+  border-radius: 0 12px 0 14px;
+  box-shadow: 0 2px 8px rgba(255,87,34,0.13);
+  letter-spacing: 0.03em;
+  z-index: 2;
+  transition: background 0.18s;
+}
+.badminton-item:hover .badminton-badge {
+  background: linear-gradient(90deg, #ff9800 60%, #ff5722 100%);
+}
+
+.badminton-name {
+  font-size: 1.13rem;
+  font-weight: 700;
+  color: #1d3557;
+  text-align: center;
+  margin: 10px 0 6px 0;
+  min-height: 48px;
+  transition: color 0.18s;
+}
+.badminton-item:hover .badminton-name {
+  color: #ff5722;
+}
+.badminton-price {
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #e53935;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+  transition: color 0.18s;
+}
+.badminton-item:hover .badminton-price {
+  color: #005bea;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px);}
+  to { opacity: 1; transform: none;}
+}
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-40px);}
+  to { opacity: 1; transform: none;}
+}
+
+/* Responsive */
+@media (max-width: 1350px) {
+  .badminton-container { width: 100%; }
+}
+@media (max-width: 1100px) {
+  .badminton-body { flex-direction: column; gap: 18px; }
+  .badminton-sidebar { width: 100%; min-width: 0; flex-direction: row; gap: 32px; }
+  .badminton-content { width: 100%; }
+  .badminton-list { grid-template-columns: repeat(2, 1fr); gap: 22px 12px; }
+}
+@media (max-width: 900px) {
+  .badminton-list { grid-template-columns: 1fr; }
+  .badminton-imgbox img { width: 120px; height: 120px; }
+}
+@media (max-width: 700px) {
+  .badminton-breadcrumb { padding: 12px 8px 8px 8px; font-size: 0.98rem; }
+  .badminton-container { padding: 0 2vw; }
+  .badminton-sidebar { flex-direction: column; gap: 18px; padding: 12px 8px; }
+  .badminton-content { padding: 12px 8px 18px 8px; }
+  .badminton-list { gap: 12px 6px; }
+  .badminton-item { padding: 12px 4px 10px 4px; }
+  .badminton-imgbox img { width: 90px; height: 90px; }
+}
+
+.badminton-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 36px;
+  user-select: none;
+  flex-wrap: wrap;
+}
+.page-btn,
+.page-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 12px;
+  margin: 0 2px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #1d3557;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1.5px solid #e0e7ef;
+  box-shadow: 0 1px 4px rgba(0,153,230,0.06);
+  transition: background 0.18s, color 0.18s, border 0.18s, box-shadow 0.18s, transform 0.18s;
+  cursor: pointer;
+  text-decoration: none;
+}
+.page-btn:hover:not(.active):not(:disabled) {
+  background: linear-gradient(90deg, #ff9800 0%, #ff5722 100%);
+  color: #fff;
+  border-color: #ff9800;
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 4px 16px rgba(255,87,34,0.13);
+}
+.page-btn.active,
+.page-btn:active {
+  background: linear-gradient(90deg, #ff5722 0%, #ff9800 100%);
+  color: #fff;
+  border-color: #ff5722;
+  cursor: default;
+  box-shadow: 0 2px 8px rgba(255,87,34,0.13);
+  transform: scale(1.08);
+}
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.page-btn i {
+  font-size: 1.18rem;
+}
+.page-ellipsis {
+  background: transparent;
+  border: none;
+  color: #bbb;
+  font-size: 1.2rem;
+  cursor: default;
+  min-width: 18px;
+  box-shadow: none;
+  padding: 0 4px;
+}
+@media (max-width: 700px) {
+  .badminton-pagination {
+    gap: 2px;
+    margin-top: 18px;
+  }
+  .page-btn, .page-ellipsis {
+    min-width: 28px;
+    height: 28px;
+    font-size: 0.97rem;
+    padding: 0 6px;
+    border-radius: 6px;
+  }
+}
