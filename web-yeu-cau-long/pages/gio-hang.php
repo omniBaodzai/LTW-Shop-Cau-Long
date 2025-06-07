@@ -1,81 +1,125 @@
 <?php
 
-session_start(); // Bắt đầu session
-include '../connect.php'; // Kết nối cơ sở dữ liệu
+session_start(); // Bắt đầu session. Đảm bảo đây là dòng đầu tiên trong file.
+include '../connect.php'; // Kết nối cơ sở dữ liệu.
 
 // Kiểm tra xem giỏ hàng đã được khởi tạo trong session chưa
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Xử lý thêm sản phẩm từ trang chi tiết sản phẩm
+// --- Xử lý thêm sản phẩm từ trang chi tiết sản phẩm (POST request từ AJAX hoặc form) ---
+// Logic này thường được gọi từ trang chi tiết sản phẩm khi người dùng nhấn "Thêm vào giỏ hàng".
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_to_cart') {
     $product_id = intval($_POST['product_id']);
     $quantity = intval($_POST['quantity']);
 
-    // Truy vấn sản phẩm từ cơ sở dữ liệu
+    // Kiểm tra tính hợp lệ của dữ liệu đầu vào
+    if ($product_id <= 0 || $quantity <= 0) {
+        header('Content-Type: application/json');
+        echo json_encode(['status' => 'error', 'message' => 'Dữ liệu sản phẩm không hợp lệ.']);
+        exit();
+    }
+
+    // Truy vấn thông tin sản phẩm từ cơ sở dữ liệu
     $sql_product = "SELECT id, name, price, image FROM products WHERE id = ?";
     $stmt_product = $conn->prepare($sql_product);
+
+    if ($stmt_product === false) {
+        // Ghi log lỗi và gửi phản hồi lỗi nếu prepare statement thất bại
+        error_log("Failed to prepare statement for product lookup in gio-hang.php: " . $conn->error);
+        header('Content-Type: application/json');
+        echo json_encode(['status' => 'error', 'message' => 'Lỗi hệ thống khi tìm kiếm sản phẩm.']);
+        exit();
+    }
+
     $stmt_product->bind_param("i", $product_id);
     $stmt_product->execute();
     $result_product = $stmt_product->get_result();
 
     if ($result_product->num_rows > 0) {
         $product = $result_product->fetch_assoc();
-        $unique_item_id = 'product_' . $product['id'];
+        $unique_item_id = 'product_' . $product['id']; // ID duy nhất cho mỗi sản phẩm trong giỏ hàng
 
-        // Thêm sản phẩm vào giỏ hàng
+        // Thêm sản phẩm vào giỏ hàng hoặc cập nhật số lượng
         if (!isset($_SESSION['cart'][$unique_item_id])) {
             $_SESSION['cart'][$unique_item_id] = [
-                'id' => $product['id'],
-                'name' => $product['name'],
+                'product_id' => $product['id'],      // Consistent with thanh-toan.php
+                'product_name' => $product['name'],  // Consistent with thanh-toan.php
                 'price' => $product['price'],
-                'image' => $product['image'], // Lưu hình ảnh sản phẩm
+                'image' => $product['image'],        // Store image path
                 'quantity' => $quantity
             ];
         } else {
             $_SESSION['cart'][$unique_item_id]['quantity'] += $quantity;
         }
 
-        // Trả về dữ liệu JSON
-        $total_items = array_sum(array_column($_SESSION['cart'], 'quantity'));
+        // Tính tổng số lượng sản phẩm trong giỏ hàng
+        $total_items_in_cart = 0;
+        foreach ($_SESSION['cart'] as $item) {
+            $total_items_in_cart += $item['quantity'];
+        }
+
+        // Gửi phản hồi JSON về client (thường dùng cho AJAX)
+        header('Content-Type: application/json');
         echo json_encode([
-            'product_name' => $product['name'],
+            'status' => 'success',
+            'product_name' => htmlspecialchars($product['name']),
             'product_price' => number_format($product['price'], 0, ',', '.'),
-            'product_image' => htmlspecialchars($product['image']), // Trả về đường dẫn hình ảnh
-            'total_items' => $total_items
+            'product_image' => htmlspecialchars($product['image']),
+            'total_items_in_cart' => $total_items_in_cart,
+            'message' => 'Sản phẩm đã được thêm vào giỏ hàng!'
         ]);
+    } else {
+        header('Content-Type: application/json');
+        echo json_encode(['status' => 'error', 'message' => 'Sản phẩm không tìm thấy trong cơ sở dữ liệu.']);
     }
-    exit();
+    $stmt_product->close();
+    exit(); // Rất quan trọng: Dừng script sau khi gửi phản hồi JSON
 }
 
-// Xử lý cập nhật số lượng hoặc xóa sản phẩm trong giỏ hàng
+// --- Xử lý cập nhật số lượng hoặc xóa sản phẩm trong giỏ hàng (POST request từ form trên trang này) ---
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && ($_POST['action'] == 'update' || $_POST['action'] == 'remove')) {
     $unique_item_id = $_POST['unique_item_id'] ?? null;
-    $quantity = intval($_POST['quantity'] ?? 1);
+    $quantity = intval($_POST['quantity'] ?? 1); // Đảm bảo số lượng là số nguyên
 
     if ($unique_item_id && isset($_SESSION['cart'][$unique_item_id])) {
         if ($_POST['action'] == 'update') {
+            // Cập nhật số lượng, đảm bảo không nhỏ hơn 1
             $_SESSION['cart'][$unique_item_id]['quantity'] = max(1, $quantity);
         } elseif ($_POST['action'] == 'remove') {
+            // Xóa sản phẩm khỏi giỏ hàng
             unset($_SESSION['cart'][$unique_item_id]);
         }
     }
-    // Chuyển hướng lại trang giỏ hàng
+    // Chuyển hướng lại trang giỏ hàng để cập nhật hiển thị và tránh gửi lại form khi refresh
     header('Location: gio-hang.php');
     exit;
 }
+
+// --- Tính tổng giá trị giỏ hàng để hiển thị ---
+$total_cart_price = 0;
+if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $item) {
+        // Đảm bảo các key 'price' và 'quantity' tồn tại trước khi tính toán để tránh lỗi
+        $item_price = isset($item['price']) ? floatval($item['price']) : 0;
+        $item_quantity = isset($item['quantity']) ? intval($item['quantity']) : 0;
+        $total_cart_price += ($item_price * $item_quantity);
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giỏ hàng của bạn</title>
-    <?php include '../includes/header.php'; ?>
+    <?php include '../includes/header.php'; // Chắc chắn rằng header.php có chứa các thẻ meta, title, và các link CSS/JS chung. ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
+        /* CSS của bạn đã được cung cấp và giữ nguyên, chỉ thêm một class cho nút checkout */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -132,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && ($_POST['
         /* Button styles with linear gradients and more rounding */
         .item-actions button,
         .cart-items button,
-        .cart-summary button {
+        .cart-summary .checkout-button { /* Added specific class for checkout button */
             color: white;
             border: none;
             padding: 10px 18px; /* Increased padding for all buttons */
@@ -164,17 +208,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && ($_POST['
         }
 
         /* Specific styles for "Checkout" button */
-        .cart-summary button {
+        .cart-summary .checkout-button {
             background: linear-gradient(90deg, #2a9d8f 0%,rgb(194, 109, 30) 100%); /* Green/Teal gradient */
             padding: 15px 30px; /* Larger padding for checkout button */
             font-size: 1.2em; /* Larger font for checkout */
         }
-        .cart-summary button:hover {
-            background: linear-gradient(90deg,rgb(91, 121, 155) 0%, #2a9d8f 100%); /* Reverse gradient on hover */
+        .cart-summary .checkout-button:hover {
+            background: linear-gradient(90deg,rgb(38, 59, 83) 0%, #2a9d8f 100%); /* Reverse gradient on hover */
             transform: scale(1.03) translateY(-2px); /* Slightly larger and lifted */
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
         }
-
 
         .cart-summary {
             text-align: right;
@@ -213,28 +256,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && ($_POST['
 <body>
     <div class="cart-container">
         <h1>Giỏ hàng của bạn</h1>
-        <?php if (isset($_GET['status']) && $_GET['status'] == 'added') {
-            echo '<p class="message success">Sản phẩm đã được thêm vào giỏ hàng!</p>';
-        } ?>
+        <?php if (isset($_GET['status']) && $_GET['status'] == 'added') { ?>
+            <p class="message success">Sản phẩm đã được thêm vào giỏ hàng!</p>
+        <?php } ?>
+
         <div class="cart-items">
             <?php
-            $total_cart_price = 0;
+            // Kiểm tra xem giỏ hàng có sản phẩm nào không
             if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
                 foreach ($_SESSION['cart'] as $unique_item_id => $item) {
-                    $subtotal = $item['price'] * $item['quantity'];
-                    $total_cart_price += $subtotal;
+                    // Lấy dữ liệu sản phẩm từ session, với giá trị mặc định để tránh lỗi nếu thiếu key
+                    $product_name = htmlspecialchars($item['product_name'] ?? 'Sản phẩm không xác định');
+                    $product_price = isset($item['price']) ? floatval($item['price']) : 0;
+                    $product_quantity = isset($item['quantity']) ? intval($item['quantity']) : 0;
+                    $product_image = htmlspecialchars($item['image'] ?? '');
+                    // Lưu ý: Trường 'promotion' không được thêm vào session trong logic 'add_to_cart' hiện tại.
+                    // Nếu bạn muốn hiển thị ưu đãi, cần bổ sung logic để lấy và lưu thông tin này vào session.
+                    $promotion_text = htmlspecialchars($item['promotion'] ?? 'Không có ưu đãi');
+
+                    $subtotal = $product_price * $product_quantity;
             ?>
                     <div class="cart-item">
-                        <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['name']) ?>">
+                        <img src="<?= $product_image ?>" alt="<?= $product_name ?>">
                         <div class="item-details">
-                            <h3><?= htmlspecialchars($item['name']) ?></h3>
-                            <p>Ưu đãi: <?= htmlspecialchars($item['promotion'] ?? 'Không có ưu đãi') ?></p>
-                            <p class="item-price"><?= number_format($item['price'], 0, ',', '.') ?> VNĐ</p>
+                            <h3><?= $product_name ?></h3>
+                            <p>Ưu đãi: <?= $promotion_text ?></p>
+                            <p class="item-price"><?= number_format($product_price, 0, ',', '.') ?> VNĐ</p>
                             <form action="gio-hang.php" method="POST">
                                 <input type="hidden" name="unique_item_id" value="<?= htmlspecialchars($unique_item_id) ?>">
                                 <input type="hidden" name="action" value="update">
-                                <label for="quantity">Số lượng:</label>
-                                <input type="number" name="quantity" value="<?= htmlspecialchars($item['quantity']) ?>" min="1" max="99">
+                                <label for="quantity-<?= $unique_item_id ?>">Số lượng:</label>
+                                <input type="number" id="quantity-<?= $unique_item_id ?>" name="quantity" value="<?= $product_quantity ?>" min="1" max="99">
                                 <button type="submit">Cập nhật</button>
                             </form>
                         </div>
@@ -256,7 +308,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && ($_POST['
         <div class="cart-summary">
             <h2>Tổng cộng: <?= number_format($total_cart_price, 0, ',', '.') ?> VNĐ</h2>
             <?php if ($total_cart_price > 0) { ?>
-                <button onclick="window.location.href='thanh-toan.php'">Tiến hành thanh toán</button>
+                <button class="checkout-button" onclick="window.location.href='thanh-toan.php?source=cart'">Tiến hành thanh toán</button>
             <?php } ?>
         </div>
     </div>

@@ -2,10 +2,13 @@
 session_start(); // Bắt đầu session
 include '../connect.php'; // Kết nối cơ sở dữ liệu
 
+
 $cart_items_for_checkout = [];
 $total_checkout_price = 0;
 $shipping_fee = 30000; // Phí vận chuyển cố định
 $final_total = 0;
+$error_message = '';
+$success_message = '';
 
 // Lấy thông tin người dùng nếu đã đăng nhập
 $user_info = [];
@@ -13,23 +16,29 @@ if (isset($_SESSION['user_id'])) {
     $user_id = intval($_SESSION['user_id']);
     $sql_user = "SELECT name, email, phone, address, city, district FROM users WHERE id = ?";
     $stmt_user = $conn->prepare($sql_user);
-    $stmt_user->bind_param("i", $user_id);
-    $stmt_user->execute();
-    $result_user = $stmt_user->get_result();
-    if ($result_user->num_rows > 0) {
-        $user_info = $result_user->fetch_assoc();
+    if ($stmt_user === false) {
+        error_log("Failed to prepare statement for user info: " . $conn->error);
+    } else {
+        $stmt_user->bind_param("i", $user_id);
+        $stmt_user->execute();
+        $result_user = $stmt_user->get_result();
+        if ($result_user->num_rows > 0) {
+            $user_info = $result_user->fetch_assoc();
+        }
+        $stmt_user->close();
     }
 }
 
-// Xử lý khi nhấn "Mua ngay" từ trang sản phẩm
+// --- Xử lý khi nhấn "Mua ngay" từ trang sản phẩm (POST request) ---
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'buy_now') {
+    // Sử dụng null coalescing operator ?? để cung cấp giá trị mặc định nếu key không tồn tại
     $product_id = $_POST['product_id'] ?? null;
     $product_name = htmlspecialchars($_POST['product_name'] ?? 'Sản phẩm không tên');
     $product_price = floatval($_POST['product_price'] ?? 0);
     $product_image = htmlspecialchars($_POST['product_image'] ?? '');
     $quantity = intval($_POST['quantity'] ?? 1);
 
-    if ($product_id && $quantity > 0) {
+    if ($product_id && $quantity > 0 && $product_price >= 0) { // Thêm kiểm tra product_price
         $_SESSION['buy_now_item'] = [
             'product_id' => $product_id,
             'product_name' => $product_name,
@@ -37,30 +46,111 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             'product_image' => $product_image,
             'quantity' => $quantity
         ];
-        header('Location: thanh-toan.php');
+        // Xóa giỏ hàng thông thường khi "Mua ngay" để tránh xung đột
+        unset($_SESSION['cart']); 
+        // Chuyển hướng để chỉ xử lý từ session 'buy_now_item'
+        header('Location: thanh-toan.php?source=buy_now');
         exit();
     } else {
-        $error_message = "Không có sản phẩm hợp lệ để thanh toán.";
-    }
-} elseif (isset($_SESSION['buy_now_item'])) {
-    $cart_items_for_checkout[] = $_SESSION['buy_now_item'];
-    foreach ($cart_items_for_checkout as $item) {
-        $total_checkout_price += $item['price'] * $item['quantity'];
-    }
-} else {
-    // Nếu không phải "Mua ngay", lấy từ giỏ hàng thông thường (session['cart'])
-    $cart_items_for_checkout = $_SESSION['cart'] ?? [];
-    foreach ($cart_items_for_checkout as $item) {
-        $total_checkout_price += $item['price'] * $item['quantity'];
+        $error_message = "Không có sản phẩm hợp lệ để thanh toán ngay.";
     }
 }
 
+// --- Xác định các sản phẩm sẽ thanh toán ---
+// Logic này chạy khi trang thanh-toan.php được tải (GET request, sau redirect hoặc truy cập trực tiếp)
+
+// Trường hợp 1: Yêu cầu đến từ nút "Tiến hành thanh toán" trên trang giỏ hàng
+if (isset($_GET['source']) && $_GET['source'] == 'cart') {
+    // Rất quan trọng: Xóa buy_now_item ngay lập tức nếu đến từ giỏ hàng
+    unset($_SESSION['buy_now_item']); 
+    
+    // Đảm bảo $_SESSION['cart'] là một mảng
+    $cart_items_for_checkout = $_SESSION['cart'] ?? [];
+    
+    // Lọc bỏ các mục không hợp lệ trong giỏ hàng (thiếu thông tin)
+    $valid_cart_items = [];
+    foreach ($cart_items_for_checkout as $key => $item) {
+        if (isset($item['product_id'], $item['product_name'], $item['price'], $item['quantity'], $item['image'])) {
+            $valid_cart_items[$key] = $item;
+        } else {
+            error_log("Cart item missing data: " . json_encode($item));
+            // Tùy chọn: Xóa mục bị lỗi khỏi giỏ hàng
+            // unset($_SESSION['cart'][$key]);
+        }
+    }
+    $cart_items_for_checkout = $valid_cart_items;
+
+    if (empty($cart_items_for_checkout)) {
+        $error_message = "Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm để thanh toán.";
+        // Tùy chọn: chuyển hướng về trang giỏ hàng nếu trống
+        // header('Location: ../cart.php');
+        // exit();
+    }
+}
+// Trường hợp 2: Yêu cầu đến từ redirect sau khi nhấn "Mua ngay"
+elseif (isset($_GET['source']) && $_GET['source'] == 'buy_now') {
+    // Nếu có 'buy_now_item' trong session, sử dụng nó
+    if (isset($_SESSION['buy_now_item']) && !empty($_SESSION['buy_now_item'])) {
+        // Kiểm tra tính hợp lệ của buy_now_item
+        $buy_now_item = $_SESSION['buy_now_item'];
+        if (isset($buy_now_item['product_id'], $buy_now_item['product_name'], $buy_now_item['price'], $buy_now_item['quantity'], $buy_now_item['product_image'])) {
+            $cart_items_for_checkout[] = $buy_now_item;
+        } else {
+            $error_message = "Thông tin sản phẩm 'Mua ngay' không đầy đủ hoặc không hợp lệ. Vui lòng thử lại.";
+            error_log("Buy now item missing data: " . json_encode($buy_now_item));
+            unset($_SESSION['buy_now_item']); // Xóa mục lỗi
+        }
+    } else {
+        // Nếu không có buy_now_item trong session (vd: refresh trang sau khi đã dùng),
+        // thì mặc định không có sản phẩm nào
+        $error_message = "Không có sản phẩm 'Mua ngay' hợp lệ để thanh toán.";
+    }
+}
+// Trường hợp 3: Truy cập trang thanh-toan.php mà không có tham số 'source' (ví dụ: refresh trang, gõ trực tiếp URL)
+else {
+    // Nếu có buy_now_item còn sót lại, ưu tiên nó (trường hợp người dùng refresh trang thanh toán sau khi Mua ngay)
+    if (isset($_SESSION['buy_now_item']) && !empty($_SESSION['buy_now_item'])) {
+        $buy_now_item = $_SESSION['buy_now_item'];
+        if (isset($buy_now_item['product_id'], $buy_now_item['product_name'], $buy_now_item['price'], $buy_now_item['quantity'], $buy_now_item['product_image'])) {
+            $cart_items_for_checkout[] = $buy_now_item;
+        } else {
+            $error_message = "Thông tin sản phẩm 'Mua ngay' không đầy đủ hoặc không hợp lệ. Vui lòng thử lại.";
+            error_log("Buy now item (refresh) missing data: " . json_encode($buy_now_item));
+            unset($_SESSION['buy_now_item']); // Xóa mục lỗi
+        }
+    }
+    // Nếu không có buy_now_item, kiểm tra giỏ hàng thông thường
+    elseif (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+        $valid_cart_items = [];
+        foreach ($_SESSION['cart'] as $key => $item) {
+            if (isset($item['product_id'], $item['product_name'], $item['price'], $item['quantity'], $item['image'])) {
+                $valid_cart_items[$key] = $item;
+            } else {
+                error_log("Cart item (refresh) missing data: " . json_encode($item));
+                // Tùy chọn: Xóa mục bị lỗi khỏi giỏ hàng
+                // unset($_SESSION['cart'][$key]);
+            }
+        }
+        $cart_items_for_checkout = $valid_cart_items;
+
+    }
+    // Nếu cả hai đều trống
+    if (empty($cart_items_for_checkout)) { // Kiểm tra lại sau khi đã cố gắng lấy từ cả 2 nguồn
+        $error_message = "Không có sản phẩm nào để thanh toán. Vui lòng thêm sản phẩm vào giỏ hàng hoặc sử dụng chức năng 'Mua ngay'.";
+    }
+}
+
+
+// --- Tính toán tổng tiền dựa trên $cart_items_for_checkout đã xác định ---
+foreach ($cart_items_for_checkout as $item) {
+    // Thêm kiểm tra isset() ở đây để tránh lỗi nếu có item nào đó bị thiếu key
+    $item_price = isset($item['price']) ? floatval($item['price']) : 0;
+    $item_quantity = isset($item['quantity']) ? intval($item['quantity']) : 0;
+    $total_checkout_price += $item_price * $item_quantity;
+}
 $final_total = $total_checkout_price + $shipping_fee;
 
-$error_message = '';
-$success_message = '';
-
-// Xử lý đặt hàng
+// --- Xử lý đặt hàng khi form được gửi (POST request) ---
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'place_order') {
     $full_name = htmlspecialchars(trim($_POST['fullName']));
     $phone = htmlspecialchars(trim($_POST['phone']));
@@ -73,33 +163,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     if (empty($full_name) || empty($phone) || empty($address) || empty($city) || empty($district) || empty($payment_method)) {
         $error_message = "Vui lòng điền đầy đủ thông tin bắt buộc.";
     } elseif (empty($cart_items_for_checkout)) {
-        $error_message = "Không có sản phẩm nào trong đơn hàng để thanh toán.";
+        $error_message = "Không có sản phẩm nào trong đơn hàng để thanh toán. Vui lòng thử lại.";
     } else {
         $conn->begin_transaction(); // Bắt đầu giao dịch
 
         try {
-            // Lấy user_id nếu đã đăng nhập
-            $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+            $user_id_for_order = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
-            // Chuẩn bị câu truy vấn chèn đơn hàng
             $stmt = $conn->prepare("INSERT INTO orders (user_id, full_name, phone, email, address, city, district, payment_method, total_price, shipping_fee, final_total, order_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
-            $stmt->bind_param("isssssssddd", $user_id, $full_name, $phone, $email, $address, $city, $district, $payment_method, $total_checkout_price, $shipping_fee, $final_total);
-            $stmt->execute();
-            $order_id = $conn->insert_id; // Lấy ID đơn hàng vừa tạo
+            if ($stmt === false) {
+                throw new Exception("Lỗi khi chuẩn bị truy vấn đơn hàng: " . $conn->error);
+            }
+            $stmt->bind_param("isssssssddd", $user_id_for_order, $full_name, $phone, $email, $address, $city, $district, $payment_method, $total_checkout_price, $shipping_fee, $final_total);
+            if (!$stmt->execute()) {
+                throw new Exception("Lỗi khi chèn đơn hàng: " . $stmt->error);
+            }
+            $order_id = $conn->insert_id;
             $stmt->close();
 
-            // Chuẩn bị câu truy vấn chèn từng sản phẩm vào order_items
             $stmt_item = $conn->prepare("INSERT INTO order_items (order_id, product_id, product_name, price, quantity) VALUES (?, ?, ?, ?, ?)");
+            if ($stmt_item === false) {
+                throw new Exception("Lỗi khi chuẩn bị truy vấn chi tiết đơn hàng: " . $conn->error);
+            }
+
             foreach ($cart_items_for_checkout as $item) {
-                $stmt_item->bind_param("iisdi", $order_id, $item['product_id'], $item['product_name'], $item['price'], $item['quantity']);
-                $stmt_item->execute();
+                // Kiểm tra lại tính tồn tại của các key trước khi sử dụng trong bind_param
+                $product_id_int = intval($item['product_id'] ?? 0);
+                $item_name = htmlspecialchars($item['product_name'] ?? 'Unknown Product');
+                $item_price_float = floatval($item['price'] ?? 0);
+                $item_quantity_int = intval($item['quantity'] ?? 0);
+
+                // Chỉ chèn nếu có đủ thông tin cần thiết
+                if ($product_id_int > 0 && $item_price_float >= 0 && $item_quantity_int > 0) {
+                    $stmt_item->bind_param("iisdi", $order_id, $product_id_int, $item_name, $item_price_float, $item_quantity_int);
+                    if (!$stmt_item->execute()) {
+                        throw new Exception("Lỗi khi chèn sản phẩm vào đơn hàng: " . $stmt_item->error);
+                    }
+                } else {
+                    error_log("Skipping invalid order item: " . json_encode($item));
+                }
             }
             $stmt_item->close();
 
             $conn->commit(); // Xác nhận giao dịch
 
+            // Xóa sản phẩm khỏi session sau khi đặt hàng thành công
             unset($_SESSION['cart']);
-            unset($_SESSION['buy_now_item']);
+            unset($_SESSION['buy_now_item']); // Quan trọng: luôn xóa cả buy_now_item sau khi đặt hàng
 
             // Chuyển hướng đến trang xác nhận đơn hàng
             header('Location: chi-tiet-don-hang.php?order_id=' . $order_id);
@@ -121,15 +231,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     <?php include '../includes/header.php'; ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
     <link rel="stylesheet" href="../assets/css/style.css">
-</head>
-<body>
-<style>
-    body {
-        font-family: "Segoe UI", Tahoma, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f4;
-    }
+    <style>
+        /* Your existing CSS block should go here, or link to an external CSS file */
+        body {
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
 
         .checkout-container {
             max-width: 800px;
@@ -140,14 +249,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         .section-title {
-            font-size: 1.5rem; /* Kích thước font */
+            font-size: 1.5rem;
             font-weight: 800;
             color: #1d3557;
             margin-bottom: 16px;
             position: relative;
             display: inline-block;
-            text-align: center; /* Căn giữa nội dung */
-            width: 100%; /* Đảm bảo nội dung chiếm toàn bộ chiều ngang */
+            text-align: center;
+            width: 100%;
         }
         .section-title::after {
             content: "";
@@ -191,7 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             border-radius: 4px;
             font-size: 1rem;
             box-sizing: border-box;
-            color: #000; /* Màu chữ đen */
+            color: #000;
             background-color: #f9f9f9;
             transition: border-color 0.3s ease;
         }
@@ -204,172 +313,99 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             outline: none;
         }
 
-        .form-group i {
-            position: absolute;
-            top: 50%;
-            left: 10px;
-            transform: translateY(-50%);
-            font-size: 1.2rem;
-            color: #007bff;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
+        .payment-methods {
             margin-top: 20px;
         }
 
-        .form-actions button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
+        .payment-methods label {
+            display: block;
+            margin-bottom: 10px;
             font-size: 1rem;
+            color: #333;
+        }
+
+        .payment-methods input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .order-summary {
+            border: 1px solid #eee;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .order-summary ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .order-summary ul li {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .order-summary ul li span:first-child {
+            font-weight: bold;
+        }
+
+        .order-total {
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 15px;
+            color: #dc3545;
+        }
+
+        .place-order-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #21c4dd 0%, #39b523 100%);
+            color: white;
+            border: none;
+            border-radius: 22px;
+            font-size: 1.2rem;
             cursor: pointer;
+            margin-top: 30px;
+            text-align: center;
             transition: background-color 0.3s ease;
         }
 
-        .form-actions .save-button {
-            background-color: #28a745;
-            color: white;
+        .place-order-button:hover {
+            background: linear-gradient(90deg, #39b523 0%, #21c4dd 100%);
         }
 
-        .form-actions .save-button:hover {
-            background-color: #218838;
+        .message {
+            display: none;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-size: 1rem;
         }
 
-        .form-actions .cancel-button {
-            background-color: #dc3545;
-            color: white;
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
-        .form-actions .cancel-button:hover {
-            background-color: #c82333;
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
-    .payment-methods {
-        margin-top: 20px;
-    }
 
-    .payment-methods label {
-        display: block;
-        margin-bottom: 10px;
-        font-size: 1rem;
-        color: #333;
-    }
-
-    .payment-methods input[type="radio"] {
-        margin-right: 10px;
-    }
-
-    .order-summary {
-        border: 1px solid #eee;
-        padding: 20px;
-        margin-top: 30px;
-        background-color: #f9f9f9;
-        border-radius: 5px;
-    }
-
-    .order-summary ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .order-summary ul li {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        font-size: 1rem;
-    }
-
-    .order-summary ul li span:first-child {
-        font-weight: bold;
-    }
-
-    .order-total {
-        font-size: 1.4rem;
-        font-weight: bold;
-        text-align: right;
-        margin-top: 15px;
-        color: #dc3545;
-    }
-
-    .place-order-button {
-        display: block;
-        width: 100%;
-        padding: 15px;
-        background: linear-gradient(90deg, #21c4dd 0%, #39b523 100%);
-        color: white;
-        border: none;
-        
-        border-radius: 22px;
-        font-size: 1.2rem;
-        cursor: pointer;
-        margin-top: 30px;
-        text-align: center;
-        transition: background-color 0.3s ease;
-    }
-
-    .place-order-button:hover {
-        background-color: #218838;
-    }
-
-    .message {
-        display: none;
-        padding: 10px;
-        margin-bottom: 15px;
-        border-radius: 4px;
-        font-size: 1rem;
-    }
-
-    .message.error {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-
-    .message.success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-
-    .message.show {
-        display: block;
-    }
-
-    .action-buttons {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 20px;
-    }
-
-    .action-buttons button {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .action-buttons .save-button {
-        background-color: #28a745;
-        color: white;
-    }
-
-    .action-buttons .save-button:hover {
-        background-color: #218838;
-    }
-
-    .action-buttons .cancel-button {
-        background-color: #dc3545;
-        color: white;
-    }
-
-    .action-buttons .cancel-button:hover {
-        background-color: #c82333;
-    }
-</style>
+        .message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
 <div class="checkout-container">
     <h1>Thanh toán đơn hàng</h1>
 
@@ -415,9 +451,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         <div class="section-title">Tóm tắt đơn hàng</div>
         <div class="order-summary">
             <ul>
-                <?php foreach ($cart_items_for_checkout as $item): ?>
-                    <li><span><?= htmlspecialchars($item['product_name']); ?> (x<?= htmlspecialchars($item['quantity']); ?>)</span><span><?= number_format($item['price'] * $item['quantity'], 0, ',', '.') ?>₫</span></li>
-                <?php endforeach; ?>
+                <?php
+                // Display cart items for checkout
+                if (!empty($cart_items_for_checkout)) {
+                    foreach ($cart_items_for_checkout as $item):
+                        // Kiểm tra sự tồn tại của các key trước khi hiển thị
+                        $product_name = htmlspecialchars($item['product_name'] ?? 'Tên sản phẩm không xác định');
+                        $quantity = htmlspecialchars($item['quantity'] ?? 0);
+                        $price = htmlspecialchars($item['price'] ?? 0); // Lấy giá gốc
+                        $subtotal_item = (isset($item['price']) && isset($item['quantity'])) ? ($item['price'] * $item['quantity']) : 0;
+                ?>
+                        <li>
+                            <span><?= $product_name; ?> (x<?= $quantity; ?>)</span>
+                            <span><?= number_format($subtotal_item, 0, ',', '.') ?>₫</span>
+                        </li>
+                <?php
+                    endforeach;
+                } else {
+                    echo '<li><span style="color: #888;">Không có sản phẩm nào để hiển thị.</span></li>';
+                }
+                ?>
                 <li><span>Tạm tính:</span><span><?= number_format($total_checkout_price, 0, ',', '.') ?>₫</span></li>
                 <li><span>Phí vận chuyển:</span><span><?= number_format($shipping_fee, 0, ',', '.') ?>₫</span></li>
             </ul>

@@ -245,7 +245,7 @@ include './connect.php'; // Kết nối cơ sở dữ liệu
 
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const tabs = document.querySelectorAll(".category-tabs .tab");
     const productList = document.querySelector(".product-list");
 
@@ -258,14 +258,24 @@ include './connect.php'; // Kết nối cơ sở dữ liệu
             .then((data) => {
                 productList.innerHTML = ""; // Xóa thông báo tải
                 if (data.length > 0) {
+                    let html = "";
                     data.forEach((product) => {
-                        productList.innerHTML += `
-                            <div class="product-card">
+                        html += `
+                            <div class="product-card" data-id="${product.id}" style="cursor:pointer;">
                                 <img src="${product.image}" alt="${product.name}" class="product-image" />
                                 <h3 class="product-name">${product.name}</h3>
                                 <p class="product-price">${product.price.toLocaleString()} đ</p>
                             </div>
                         `;
+                    });
+                    productList.innerHTML = html;
+
+                    // Gắn sự kiện click chuyển trang chi tiết sản phẩm
+                    document.querySelectorAll(".product-card").forEach(card => {
+                        card.addEventListener("click", () => {
+                            const productId = card.getAttribute("data-id");
+                            window.location.href = `pages/chi-tiet-san-pham.php?id=${productId}`;
+                        });
                     });
                 } else {
                     productList.innerHTML = "<p>Không có sản phẩm nào.</p>";
@@ -294,6 +304,7 @@ include './connect.php'; // Kết nối cơ sở dữ liệu
     // Tải sản phẩm ban đầu (Tất cả)
     loadProducts("all");
 });
+
 </script>
 </body>
 </html> 
