@@ -1,14 +1,19 @@
 <?php
-include '../connect.php'; // Kết nối cơ sở dữ liệu
+// Bắt đầu session để có thể sử dụng các biến session nếu cần
+session_start(); 
+include '../connect.php'; // Kết nối cơ sở dữ liệu. Đảm bảo đường dẫn đúng.
 
 // Lấy order_id từ URL
 if (!isset($_GET['order_id']) || !is_numeric($_GET['order_id'])) {
-    die("Đơn hàng không hợp lệ.");
+    // Nếu không có order_id hợp lệ, chuyển hướng hoặc hiển thị lỗi
+    $_SESSION['error'] = "Đơn hàng không hợp lệ hoặc không tìm thấy.";
+    header("Location: ../index.php"); // Hoặc một trang lỗi chung
+    exit();
 }
 
 $order_id = intval($_GET['order_id']);
 
-// Truy vấn thông tin đơn hàng
+// Truy vấn thông tin đơn hàng chính
 $stmt_order = $conn->prepare("
     SELECT 
         full_name, phone, email, address, city, district, payment_method, 
@@ -21,19 +26,30 @@ $stmt_order->execute();
 $result_order = $stmt_order->get_result();
 
 if ($result_order->num_rows === 0) {
-    die("Không tìm thấy đơn hàng.");
+    // Nếu không tìm thấy đơn hàng, hiển thị lỗi
+    $_SESSION['error'] = "Không tìm thấy đơn hàng với mã #{$order_id}.";
+    header("Location: ../index.php"); // Hoặc một trang lỗi chung
+    exit();
 }
 
 $order = $result_order->fetch_assoc();
+$stmt_order->close(); // Đóng statement sau khi fetch
 
-// Truy vấn thông tin các sản phẩm trong đơn hàng
+// Truy vấn thông tin các sản phẩm trong đơn hàng, bao gồm serial_number và warranty_expire_date
+// và thời hạn bảo hành gốc từ bảng products để hiển thị
 $stmt_items = $conn->prepare("
     SELECT 
-        product_name, price, quantity 
-    FROM order_items 
-    WHERE order_id = ?
+        oi.product_name, 
+        oi.price, 
+        oi.quantity, 
+        oi.serial_number,           -- Lấy serial_number đã được lưu
+        oi.warranty_expire_date,    -- Lấy warranty_expire_date đã được lưu
+        p.warranty                  -- Lấy thời hạn bảo hành gốc (ví dụ: 12 tháng)
+    FROM order_items oi
+    JOIN products p ON oi.product_id = p.id
+    WHERE oi.order_id = ?
 ");
-$stmt_items->bind_param("i", $order_id);
+$stmt_items->bind_param("i", $order_id); // Dòng này là dòng 40 trong ảnh chụp màn hình cũ của bạn
 $stmt_items->execute();
 $result_items = $stmt_items->get_result();
 ?>
@@ -42,13 +58,12 @@ $result_items = $stmt_items->get_result();
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết đơn hàng #<?= htmlspecialchars($order_id) ?></title>
     <link rel="stylesheet" href="../assets/css/style.css">
-    <?php
-include '../includes/header.php'; ?>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
-<link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
+    
+    <?php // include '../includes/header.php'; // Nếu header.php chứa các meta tag hoặc CSS cần thiết ?>
 
     <style>
         body {
@@ -90,6 +105,7 @@ include '../includes/header.php'; ?>
         ul {
             list-style-type: none;
             margin-top: 15px;
+            padding-left: 0; /* Thêm để xóa padding mặc định của ul */
         }
         ul li {
             margin-bottom: 10px;
@@ -134,7 +150,7 @@ include '../includes/header.php'; ?>
     </style>
 </head>
 <body>
-    
+    <?php include '../includes/header.php'; // Đặt include header ở đây nếu nó chứa phần đầu HTML ?>
 
     <div class="container">
         <h1>Chi tiết đơn hàng</h1>
@@ -151,7 +167,7 @@ include '../includes/header.php'; ?>
             <li><span class="label">Phương thức thanh toán:</span> <?= htmlspecialchars($order['payment_method']) ?></li>
         </ul>
 
-        <h2>Chi tiết đơn hàng</h2>
+        <h2>Chi tiết sản phẩm</h2>
         <table>
             <thead>
                 <tr>
@@ -159,30 +175,54 @@ include '../includes/header.php'; ?>
                     <th>Đơn giá (VNĐ)</th>
                     <th>Số lượng</th>
                     <th>Thành tiền (VNĐ)</th>
+                    <th>Thời hạn bảo hành</th>
+                    <th>Serial Number</th>
+                    <th>Ngày hết hạn bảo hành</th>
                 </tr>
             </thead>
             <tbody>
-                <?php while ($item = $result_items->fetch_assoc()) : ?>
+                <?php 
+                if ($result_items->num_rows > 0) :
+                    while ($item = $result_items->fetch_assoc()) :
+                        // Định dạng ngày hết hạn bảo hành
+                        $warranty_expire_date_display = "Không áp dụng";
+                        if (!empty($item['warranty_expire_date']) && $item['warranty_expire_date'] !== '0000-00-00') {
+                            $warranty_expire_date_display = date('d/m/Y', strtotime($item['warranty_expire_date']));
+                        }
+                        
+                        // Hiển thị Serial Number, nếu rỗng thì là "N/A"
+                        $serial_number_display = htmlspecialchars($item['serial_number'] ?? 'N/A');
+                ?>
                 <tr>
                     <td><?= htmlspecialchars($item['product_name']) ?></td>
                     <td><?= number_format($item['price'], 0, ',', '.') ?></td>
                     <td><?= $item['quantity'] ?></td>
                     <td><?= number_format($item['price'] * $item['quantity'], 0, ',', '.') ?></td>
+                    <td><?= htmlspecialchars($item['warranty'] ?? 'Không rõ') ?></td>
+                    <td><?= $serial_number_display ?></td>
+                    <td><?= $warranty_expire_date_display ?></td>
                 </tr>
-                <?php endwhile; ?>
+                <?php 
+                    endwhile; 
+                else :
+                ?>
+                <tr>
+                    <td colspan="7">Không có sản phẩm nào trong đơn hàng này.</td>
+                </tr>
+                <?php endif; ?>
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="3" style="text-align:right;">Tổng tiền hàng:</th>
-                    <th><?= number_format($order['total_price'], 0, ',', '.') ?> VNĐ</th>
+                    <th colspan="5" style="text-align:right;">Tổng tiền hàng:</th>
+                    <th colspan="2"><?= number_format($order['total_price'], 0, ',', '.') ?> VNĐ</th>
                 </tr>
                 <tr>
-                    <th colspan="3" style="text-align:right;">Phí vận chuyển:</th>
-                    <th><?= number_format($order['shipping_fee'], 0, ',', '.') ?> VNĐ</th>
+                    <th colspan="5" style="text-align:right;">Phí vận chuyển:</th>
+                    <th colspan="2"><?= number_format($order['shipping_fee'], 0, ',', '.') ?> VNĐ</th>
                 </tr>
                 <tr>
-                    <th colspan="3" style="text-align:right;">Tổng thanh toán:</th>
-                    <th><?= number_format($order['final_total'], 0, ',', '.') ?> VNĐ</th>
+                    <th colspan="5" style="text-align:right;">Tổng thanh toán:</th>
+                    <th colspan="2"><?= number_format($order['final_total'], 0, ',', '.') ?> VNĐ</th>
                 </tr>
             </tfoot>
         </table>
@@ -190,12 +230,12 @@ include '../includes/header.php'; ?>
         <p class="thanks">Cảm ơn bạn đã mua sắm tại cửa hàng của chúng tôi!</p>
     </div>
 
-<?php include '../includes/footer.php'; ?>
+    <?php include '../includes/footer.php'; // Đặt include footer ở đây ?>
 </body>
-</html>
+</html> 
 
 <?php
-$stmt_order->close();
+// Đảm bảo đóng các statement và kết nối sau khi sử dụng
 $stmt_items->close();
-$conn->close();
+// $conn->close(); // Kết nối này sẽ được đóng trong finally block của process_checkout.php nếu bạn muốn tái sử dụng
 ?>

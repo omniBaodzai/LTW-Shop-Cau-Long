@@ -20,74 +20,90 @@ if (session_status() === PHP_SESSION_NONE) {
             <div class="dropdown-menu mega-menu">
               <div class="mega-menu-column">
                 
-                <div class="mega-menu-title"><a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/vot-cau-long.php">VỢT CẦU LÔNG</a></div>
-                <a href="#" class="mega-menu-link">Vợt cầu lông Yonex</a>
-                <a href="#" class="mega-menu-link">Vợt cầu lông Lining</a>
-                <a href="#" class="mega-menu-link">Vợt cầu lông Victor</a>
-                <a href="#" class="mega-menu-link">Vợt cầu lông Apacs</a>
-                <a href="#" class="mega-menu-link">Vợt cầu lông Proace</a>
-                <a href="#" class="mega-menu-link">Vợt cầu lông Fleet</a>
+              <div class="mega-menu-title"><a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/vot-cau-long.php">VỢT CẦU LÔNG</a></div>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Vợt+cầu+lông+Yonex" class="mega-menu-link">Vợt cầu lông Yonex</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Vợt+cầu+lông+Lining" class="mega-menu-link">Vợt cầu lông Lining</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Vợt+cầu+lông+Victor" class="mega-menu-link">Vợt cầu lông Victor</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Vợt+cầu+lông+Apacs" class="mega-menu-link">Vợt cầu lông Apacs</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Vợt+cầu+lông+Proace" class="mega-menu-link">Vợt cầu lông Proace</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Vợt+cầu+lông+Fleet" class="mega-menu-link">Vợt cầu lông Fleet</a>
               </div>
               <div class="mega-menu-column">
-                <div class="mega-menu-title"><a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/giay-cau-long.php">GIÀY CẦU LÔNG</div>
-                <a href="#" class="mega-menu-link">Giày cầu lông Victor</a>
-                <a href="#" class="mega-menu-link">Giày cầu lông Lining</a>
-                <a href="#" class="mega-menu-link">Giày cầu lông Kawasaki</a>
-                <a href="#" class="mega-menu-link">Giày cầu lông Mizuno</a>
-                <a href="#" class="mega-menu-link">Giày cầu lông Kumpoo</a>
-                <a href="#" class="mega-menu-link">Giày cầu lông Promax</a>
+                <div class="mega-menu-title">
+                  <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/giay-cau-long.php">GIÀY CẦU LÔNG</a>
+                </div>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Giày+cầu+lông+Victor" class="mega-menu-link">Giày cầu lông Victor</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Giày+cầu+lông+Lining" class="mega-menu-link">Giày cầu lông Lining</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Giày+cầu+lông+Kawasaki" class="mega-menu-link">Giày cầu lông Kawasaki</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Giày+cầu+lông+Mizuno" class="mega-menu-link">Giày cầu lông Mizuno</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Giày+cầu+lông+Kumpoo" class="mega-menu-link">Giày cầu lông Kumpoo</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Giày+cầu+lông+Promax" class="mega-menu-link">Giày cầu lông Promax</a>
               </div>
 
               <div class="mega-menu-column">
-                <div class="mega-menu-title"><a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/ao-cau-long.php">ÁO CẦU LÔNG</div>
-                <a href="#" class="mega-menu-link">Áo cầu lông VNB</a>
-                <a href="#" class="mega-menu-link">Áo cầu lông Kamito</a>
-                <a href="#" class="mega-menu-link">Áo cầu lông Victor</a>
-                <a href="#" class="mega-menu-link">Áo cầu lông Lining</a>
-                <a href="#" class="mega-menu-link">Áo cầu lông DonexPro</a>
-                <a href="#" class="mega-menu-link">Áo cầu lông Alien Armour</a>
-              </div>
-              <div class="mega-menu-column">
-                <div class="mega-menu-title"><a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/quan-cau-long.php">QUẦN CẦU LÔNG</div>
-                <a href="#" class="mega-menu-link">Quần cầu lông Victor</a>
-                <a href="#" class="mega-menu-link">Quần cầu lông Lining</a>
-                <a href="#" class="mega-menu-link">Quần cầu lông VNB</a>
-                <a href="#" class="mega-menu-link">Quần cầu lông SFD</a>
-                <a href="#" class="mega-menu-link">Quần cầu lông Donex Pro</a>
-                <a href="#" class="mega-menu-link">Quần cầu lông Apacs</a>
-              </div>
-              <div class="mega-menu-column">
-                <div class="mega-menu-title"><a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/vay-cau-long.php">VÁY CẦU LÔNG</div>
-                <a href="#" class="mega-menu-link">Váy cầu lông Victec</a>
-                <a href="#" class="mega-menu-link">Váy cầu lông Lining</a>
-                <a href="#" class="mega-menu-link">Váy cầu lông Donex Pro</a>
-                <a href="#" class="mega-menu-link">Váy cầu lông Victor</a>
-                <a href="#" class="mega-menu-link">Váy cầu lông Kamito</a>
-                <a href="#" class="mega-menu-link">Váy cầu lông Taro</a>
+                <div class="mega-menu-title">
+                  <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/ao-cau-long.php">ÁO CẦU LÔNG</a>
+                </div>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Áo+cầu+lông+VNB" class="mega-menu-link">Áo cầu lông VNB</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Áo+cầu+lông+Kamito" class="mega-menu-link">Áo cầu lông Kamito</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Áo+cầu+lông+Victor" class="mega-menu-link">Áo cầu lông Victor</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Áo+cầu+lông+Lining" class="mega-menu-link">Áo cầu lông Lining</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Áo+cầu+lông+DonexPro" class="mega-menu-link">Áo cầu lông DonexPro</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Áo+cầu+lông+Alien+Armour" class="mega-menu-link">Áo cầu lông Alien Armour</a>
               </div>
 
               <div class="mega-menu-column">
-                <div class="mega-menu-title"><a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/ong-cau-long.php">ỐNG CẦU LÔNG</div>
-                <a href="#" class="mega-menu-link">Ống cầu lông VNB</a>
-                <a href="#" class="mega-menu-link">Ống cầu lông Yonex</a>
-                <a href="#" class="mega-menu-link">Ống cầu lông Lining</a>
-                <a href="#" class="mega-menu-link">Ống cầu lông Victor</a>
-                <a href="#" class="mega-menu-link">Ống cầu lông Apacs</a>
-                <a href="#" class="mega-menu-link">Ống cầu lông Proace</a>
+                <div class="mega-menu-title">
+                  <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/quan-cau-long.php">QUẦN CẦU LÔNG</a>
+                </div>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Quần+cầu+lông+Victor" class="mega-menu-link">Quần cầu lông Victor</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Quần+cầu+lông+Lining" class="mega-menu-link">Quần cầu lông Lining</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Quần+cầu+lông+VNB" class="mega-menu-link">Quần cầu lông VNB</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Quần+cầu+lông+SFD" class="mega-menu-link">Quần cầu lông SFD</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Quần+cầu+lông+Donex+Pro" class="mega-menu-link">Quần cầu lông Donex Pro</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Quần+cầu+lông+Apacs" class="mega-menu-link">Quần cầu lông Apacs</a>
               </div>
+
               <div class="mega-menu-column">
-                <div class="mega-menu-title"><a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/phu-kien.php">PHỤ KIỆN CẦU LÔNG</div>
-                <a href="#" class="mega-menu-link">Túi cầu lông</a>
-                <a href="#" class="mega-menu-link">Băng quấn cán</a>
-                <a href="#" class="mega-menu-link">Quấn cán vợt</a>
-                <a href="#" class="mega-menu-link">Dây cước</a>
-                <a href="#" class="mega-menu-link">Ống cầu lông</a>
-                <a href="#" class="mega-menu-link">Bình nước</a>
+                <div class="mega-menu-title">
+                  <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/vay-cau-long.php">VÁY CẦU LÔNG</a>
+                </div>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Váy+cầu+lông+Victec" class="mega-menu-link">Váy cầu lông Victec</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Váy+cầu+lông+Lining" class="mega-menu-link">Váy cầu lông Lining</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Váy+cầu+lông+Donex+Pro" class="mega-menu-link">Váy cầu lông Donex Pro</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Váy+cầu+lông+Victor" class="mega-menu-link">Váy cầu lông Victor</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Váy+cầu+lông+Kamito" class="mega-menu-link">Váy cầu lông Kamito</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Váy+cầu+lông+Taro" class="mega-menu-link">Váy cầu lông Taro</a>
               </div>
+
+              <div class="mega-menu-column">
+                <div class="mega-menu-title">
+                  <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/ong-cau-long.php">ỐNG CẦU LÔNG</a>
+                </div>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Ống+cầu+lông+VNB" class="mega-menu-link">Ống cầu lông VNB</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Ống+cầu+lông+Yonex" class="mega-menu-link">Ống cầu lông Yonex</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Ống+cầu+lông+Lining" class="mega-menu-link">Ống cầu lông Lining</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Ống+cầu+lông+Victor" class="mega-menu-link">Ống cầu lông Victor</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Ống+cầu+lông+Apacs" class="mega-menu-link">Ống cầu lông Apacs</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Ống+cầu+lông+Proace" class="mega-menu-link">Ống cầu lông Proace</a>
+              </div>
+
+              <div class="mega-menu-column">
+                <div class="mega-menu-title">
+                  <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/phu-kien.php">PHỤ KIỆN CẦU LÔNG</a>
+                </div>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Túi+cầu+lông" class="mega-menu-link">Túi cầu lông</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Băng+quấn+cán" class="mega-menu-link">Băng quấn cán</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Quấn+cán+vợt" class="mega-menu-link">Quấn cán vợt</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Dây+cước" class="mega-menu-link">Dây cước</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Balo+cầu+lông" class="mega-menu-link">Balo cầu lông</a>
+                <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Bình+nước" class="mega-menu-link">Bình nước</a>
+              </div>
+
             </div>
           </li>
           <li><a href="#" class="nav-left-link">Khuyến mãi</a></li>
-          <li><a href="#" class="nav-left-link">Tin tức</a></li>
+          <li><a href="https://thethao247.vn/cau-long-c44/" class="nav-left-link">Tin tức</a></li>
         </ul>
       </nav>
 

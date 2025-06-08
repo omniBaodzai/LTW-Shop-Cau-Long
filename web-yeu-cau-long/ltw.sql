@@ -33,6 +33,52 @@ CREATE TABLE products (
     promotion VARCHAR(255) DEFAULT NULL -- Ưu đãi sản phẩm (có thể để trống)
 );
 
+INSERT INTO products 
+(name, image, price, old_price, sku, brand, category, warranty, stock, description, specs, promotion) 
+VALUES
+(
+    'Vợt cầu lông Yonex Astrox 100ZZ',
+    'uploads/astrox100zz.jpg',
+    3200000.00,
+    3500000.00,
+    'VT-YONEX-100ZZ',
+    'Yonex',
+    'Huong Dan Mua Hang',
+    '12 tháng',
+    10,
+    'Vợt cao cấp dành cho VĐV chuyên nghiệp.',
+    'Trọng lượng: 83g, Độ cứng: cứng, Cán: G5',
+    'Tặng bao vợt + dây căng'
+),
+(
+    'Vợt cầu lông Lining Turbo X90',
+    'uploads/lining-x90.jpg',
+    900000.00,
+    1000000.00,
+    'VT-LINING-X90',
+    'Lining',
+    'Huong Dan Mua Hang',
+    '6 tháng',
+    15,
+    'Dành cho người chơi trung cấp',
+    'Trọng lượng: 85g, Cán: S2',
+    NULL
+),
+(
+    'Vợt cầu lông Apacs Z-Ziggler',
+    'uploads/apacs-zziggler.jpg',
+    600000.00,
+    NULL,
+    'VT-APACS-ZZ',
+    'Apacs',
+    'Huong Dan Mua Hang',
+    '6 tháng',
+    20,
+    'Giá rẻ, phù hợp cho người mới chơi',
+    'Khung: Graphite + Nano, Trọng lượng: 87g',
+    'Miễn phí vận chuyển toàn quốc'
+);
+
 INSERT INTO products (name, image, price, old_price, sku, brand, category, warranty, stock, description, specs, promotion) VALUES
 ('Vợt Cầu Lông VNB V88 Xanh Chính Hãng', 'https://contents.mediadecathlon.com/p2390909/sq/k$25aaf71682821f2ec8cf537b2bfc25ea/b%E1%BB%99-v%E1%BB%A3t-c%E1%BA%A7u-l%C3%B4ng-br-190-cho-ng%C6%B0%E1%BB%9Di-l%E1%BB%9Bn-v%C3%A0ng-cam-kuikma-8736755.jpg?f=480x480&format=auto', 638000.00, NULL, 'VNBV88X', 'VNB', 'Vợt Cầu Lông', '6 tháng', 100, 'Vợt Cầu Lông VNB V88 Xanh Chính Hãng là lựa chọn tuyệt vời cho người chơi phong trào và bán chuyên, mang lại sự cân bằng hoàn hảo giữa sức mạnh và khả năng kiểm soát. Thiết kế màu xanh nổi bật cùng chất liệu bền bỉ giúp người chơi tự tin trên sân.', 'Chất liệu: Carbon Fiber; Trọng lượng: 4U (80-84g); Điểm cân bằng: 295 ± 3mm; Độ cứng: Trung bình; Lực căng tối đa: 11.5 kg', 'Tặng kèm 1 quấn cán VNB'),
 ('Vợt Cầu Lông Yonex Astrox 88D', 'https://cdn.shopvnb.com/img/300x300/uploads/san_pham/vot-cau-long-vnb-v200i-hong-3.webp', 2500000.00, NULL, 'YXASTROX88D', 'Yonex', 'Vợt Cầu Lông', '6 tháng', 50, 'Vợt Cầu Lông Yonex Astrox 88D là siêu phẩm dành cho những người chơi thích lối đánh tấn công, đặc biệt mạnh mẽ trong các pha đập cầu và phòng thủ phản công. Công nghệ Rotational Generator System giúp cân bằng trọng lượng, tạo ra những cú đánh uy lực và liên tục.', 'Chất liệu: H.M. GRAPHITE + Tungsten + Namd; Trọng lượng: 3U (85-89g), 4U (80-84g); Điểm cân bằng: Nặng đầu; Độ cứng: Cứng; Lực căng tối đa: 12.5 kg', 'Giảm 5% khi mua kèm bao vợt Yonex'),
@@ -113,10 +159,14 @@ CREATE TABLE order_items (
   order_id INT NOT NULL,
   product_id INT NOT NULL,
   product_name VARCHAR(255) NOT NULL,
+  serial_number VARCHAR(100),        -- Mã số seri để kiểm tra bảo hành
   price DECIMAL(15,2) NOT NULL,
   quantity INT NOT NULL,
+  warranty_expire_date DATE,                 -- Ngày hết hạn bảo hành
   FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
   FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
+
+
 
 

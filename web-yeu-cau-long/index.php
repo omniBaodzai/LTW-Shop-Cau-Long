@@ -11,7 +11,7 @@ include './connect.php'; // Kết nối cơ sở dữ liệu
       <h1>CỬA HÀNG CẦU LÔNG SỐ 1 VIỆT NAM</h1>
       <p>Chuyên nghiệp từ cây vợt đến đôi giày<br />Đồng hành cùng đam mê</p>
       <div class="btn-group">
-        <button class="btn shop"><a href="index.php">MUA NGAY</a></button>
+        <button class="btn shop"><a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/vot-cau-long.php">MUA NGAY</a></button>
         <button class="btn explore">KHÁM PHÁ THÊM</button>
       </div>
     </section>
@@ -49,12 +49,12 @@ include './connect.php'; // Kết nối cơ sở dữ liệu
     <div class="product-section-header">
         <h2 class="section-title">Sản phẩm <span>mới</span></h2>
         <div class="category-tabs">
-            <button class="tab active" data-category="all">Tất cả</button>
-            <button class="tab" data-category="vot-cau-long">Vợt Cầu Lông</button>
-            <button class="tab" data-category="giay-cau-long">Giày Cầu Lông</button>
-            <button class="tab" data-category="ao-cau-long">Áo Cầu Lông</button>
-            <button class="tab" data-category="vay-cau-long">Váy cầu lông</button>
-            <button class="tab" data-category="quan-cau-long">Quần Cầu Lông</button>
+            <button class="tab active" category="all">Tất cả</button>
+            <button class="tab" category="Vợt Cầu Lông">Vợt Cầu Lông</button>
+            <button class="tab" category="Giày Cầu Lông">Giày Cầu Lông</button>
+            <button class="tab" category="Áo Cầu Lông">Áo Cầu Lông</button>
+            <button class="tab" category="Váy cầu lông">Váy cầu lông</button>
+            <button class="tab" category="Quần Cầu Lông">Quần Cầu Lông</button>
         </div>
     </div>
     <div class="product-list">
@@ -124,7 +124,7 @@ include './connect.php'; // Kết nối cơ sở dữ liệu
                   </a>
               </div>
               <div class="category-card">
-                  <a href="./pages/tui-vot-cau-long.php">
+                  <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Túi+cầu+lông">
                       <img
                           src="./assets/images/túi-thể-thao-35l-essential-đen-xanh-dương-kipsta-8580096.avif"
                           alt="Túi Vợt Cầu Lông"
@@ -135,7 +135,7 @@ include './connect.php'; // Kết nối cơ sở dữ liệu
                   </a>
               </div>
               <div class="category-card">
-                  <a href="./pages/balo-cau-long.php">
+                  <a href="http://localhost/LTW-Shop-Cau-Long/web-yeu-cau-long/pages/tim-kiem.php?q=Balo+cầu+lông">
                       <img
                           src="./assets/images/balo-cau-long-yonex-ba03212ex-xanh-do-gia-cong_1695584495.png"
                           alt="Balo Cầu Lông"
@@ -158,87 +158,8 @@ include './connect.php'; // Kết nối cơ sở dữ liệu
               </div>
           </div>
       </section>
-            <!-- PRODUCT CATEGORIES SECTION -->
-      <section class="category-section">
-        <div class="category-section-header">
-          <h2 class="section-title">Phụ kiện <span>cầu lông</span></h2>
-        </div>
-        <div class="category-grid">
-          <div class="category-card">
-            <img
-              src="./assets/images/hinh-anh-vot-cau-long1.png"
-              alt="Vợt Cầu Lông"
-              class="category-image"
-            />
-            <div class="category-overlay"></div>
-            <div class="category-title">VỢT CẦU LÔNG</div>
-          </div>
-          <div class="category-card">
-            <img
-              src="./assets/images/giày-cầu-lông-bs-560-lite-cho-nữ-xanh-da-trời-perfly-8651367.avif"
-              alt="Giày Cầu Lông"
-              class="category-image"
-            />
-            <div class="category-overlay"></div>
-            <div class="category-title">GIÀY CẦU LÔNG</div>
-          </div>
-          <div class="category-card">
-            <img
-              src="https://contents.mediadecathlon.com/p2586195/k$e8427e41387943b0ed95a5b3deac2f04/%C3%A1o-thun-c%E1%BA%A7u-l%C3%B4ng-nam-lite-560-xanh-navy-cam-perfly-8806696.jpg?f=1920x0&format=auto"
-              alt="Áo Cầu Lông"
-              class="category-image"
-            />
-            <div class="category-overlay"></div>
-            <div class="category-title">ÁO CẦU LÔNG</div>
-          </div>
-          <div class="category-card">
-            <img
-              src="./assets/images/quần-short-cầu-lông-nam-thoáng-khí-560-xanh-dương-perfly-8647962.avif"
-              alt="Quần Cầu Lông"
-              class="category-image"
-            />
-            <div class="category-overlay"></div>
-            <div class="category-title">QUẦN CẦU LÔNG</div>
-          </div>
-          <div class="category-card">
-            <img
-              src="./assets/images/váy-cầu-lông-nữ-thoáng-mát-lite-560-hồng-perfly-8854171.avif"
-              alt="Váy cầu lông"
-              class="category-image"
-            />
-            <div class="category-overlay"></div>
-            <div class="category-title">VÁY CẦU LÔNG</div>
-          </div>
-
-          <div class="category-card">
-            <img
-              src="./assets/images/túi-thể-thao-35l-essential-đen-xanh-dương-kipsta-8580096.avif"
-              alt="Túi Vợt Cầu Lông"
-              class="category-image"
-            />
-            <div class="category-overlay"></div>
-            <div class="category-title">TÚI VỢT CẦU LÔNG</div>
-          </div>
-          <div class="category-card">
-            <img
-              src="./assets/images/balo-cau-long-yonex-ba03212ex-xanh-do-gia-cong_1695584495.png"
-              alt="Balo Cầu Lông"
-              class="category-image"
-            />
-            <div class="category-overlay"></div>
-            <div class="category-title">BALO CẦU LÔNG</div>
-          </div>
-          <div class="category-card">
-            <img
-              src="./assets/images/ong_cau_long_pronex_02ca9b63fb99425293ab1a114d5d8362_fff64ac318d94b439c8e7a25dd013651_master.webp"
-              alt="Phụ Kiện Cầu Lông"
-              class="category-image"
-            />
-            <div class="category-overlay"></div>
-            <div class="category-title">ỐNG CẦU LÔNG</div>
-          </div>
-        </div>
-      </section>
+            
+      
     </main>
 
 <?php include './includes/footer.php'; ?>
@@ -296,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
             tab.classList.add("active");
 
             // Lấy danh mục từ thuộc tính data-category
-            const category = tab.getAttribute("data-category");
+            const category = tab.getAttribute("category");
             loadProducts(category);
         });
     });

@@ -3147,6 +3147,7 @@ width: max-content; */
   display: flex;
   flex-direction: column;
   animation: fadeInUp 0.7s;
+  
 }
 .badminton-content-header {
   display: flex;

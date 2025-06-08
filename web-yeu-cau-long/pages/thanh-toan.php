@@ -2,7 +2,6 @@
 session_start(); // Bắt đầu session
 include '../connect.php'; // Kết nối cơ sở dữ liệu
 
-
 $cart_items_for_checkout = [];
 $total_checkout_price = 0;
 $shipping_fee = 30000; // Phí vận chuyển cố định
@@ -31,20 +30,37 @@ if (isset($_SESSION['user_id'])) {
 
 // --- Xử lý khi nhấn "Mua ngay" từ trang sản phẩm (POST request) ---
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'buy_now') {
-    // Sử dụng null coalescing operator ?? để cung cấp giá trị mặc định nếu key không tồn tại
     $product_id = $_POST['product_id'] ?? null;
     $product_name = htmlspecialchars($_POST['product_name'] ?? 'Sản phẩm không tên');
     $product_price = floatval($_POST['product_price'] ?? 0);
     $product_image = htmlspecialchars($_POST['product_image'] ?? '');
     $quantity = intval($_POST['quantity'] ?? 1);
+    
+    // Thêm truy vấn để lấy thông tin bảo hành từ bảng products cho 'Mua ngay'
+    $warranty_duration = null;
+    if ($product_id) {
+        $stmt_warranty = $conn->prepare("SELECT warranty FROM products WHERE id = ?");
+        if ($stmt_warranty) { // Check if prepare was successful
+            $stmt_warranty->bind_param("i", $product_id);
+            $stmt_warranty->execute();
+            $result_warranty = $stmt_warranty->get_result();
+            if ($warranty_data = $result_warranty->fetch_assoc()) {
+                $warranty_duration = $warranty_data['warranty'];
+            }
+            $stmt_warranty->close();
+        } else {
+            error_log("Failed to prepare statement for product warranty: " . $conn->error);
+        }
+    }
 
-    if ($product_id && $quantity > 0 && $product_price >= 0) { // Thêm kiểm tra product_price
+    if ($product_id && $quantity > 0 && $product_price >= 0) {
         $_SESSION['buy_now_item'] = [
             'product_id' => $product_id,
             'product_name' => $product_name,
             'price' => $product_price,
             'product_image' => $product_image,
-            'quantity' => $quantity
+            'quantity' => $quantity,
+            'warranty_duration' => $warranty_duration // Lưu thời hạn bảo hành vào session
         ];
         // Xóa giỏ hàng thông thường khi "Mua ngay" để tránh xung đột
         unset($_SESSION['cart']); 
@@ -67,10 +83,27 @@ if (isset($_GET['source']) && $_GET['source'] == 'cart') {
     // Đảm bảo $_SESSION['cart'] là một mảng
     $cart_items_for_checkout = $_SESSION['cart'] ?? [];
     
-    // Lọc bỏ các mục không hợp lệ trong giỏ hàng (thiếu thông tin)
+    // Lọc bỏ các mục không hợp lệ trong giỏ hàng (thiếu thông tin) và lấy warranty từ DB
     $valid_cart_items = [];
     foreach ($cart_items_for_checkout as $key => $item) {
         if (isset($item['product_id'], $item['product_name'], $item['price'], $item['quantity'], $item['image'])) {
+            // Lấy thông tin bảo hành từ DB cho mỗi sản phẩm trong giỏ hàng
+            $product_id_cart = intval($item['product_id']);
+            $warranty_duration_cart = null;
+            $stmt_warranty = $conn->prepare("SELECT warranty FROM products WHERE id = ?");
+            if ($stmt_warranty) {
+                $stmt_warranty->bind_param("i", $product_id_cart);
+                $stmt_warranty->execute();
+                $result_warranty = $stmt_warranty->get_result();
+                if ($warranty_data = $result_warranty->fetch_assoc()) {
+                    $warranty_duration_cart = $warranty_data['warranty'];
+                }
+                $stmt_warranty->close();
+            } else {
+                error_log("Failed to prepare statement for product warranty (cart): " . $conn->error);
+            }
+            
+            $item['warranty_duration'] = $warranty_duration_cart; // Thêm warranty_duration vào item
             $valid_cart_items[$key] = $item;
         } else {
             error_log("Cart item missing data: " . json_encode($item));
@@ -78,6 +111,7 @@ if (isset($_GET['source']) && $_GET['source'] == 'cart') {
             // unset($_SESSION['cart'][$key]);
         }
     }
+    $_SESSION['cart'] = $valid_cart_items; // Cập nhật lại session cart với các item hợp lệ và có warranty
     $cart_items_for_checkout = $valid_cart_items;
 
     if (empty($cart_items_for_checkout)) {
@@ -94,6 +128,7 @@ elseif (isset($_GET['source']) && $_GET['source'] == 'buy_now') {
         // Kiểm tra tính hợp lệ của buy_now_item
         $buy_now_item = $_SESSION['buy_now_item'];
         if (isset($buy_now_item['product_id'], $buy_now_item['product_name'], $buy_now_item['price'], $buy_now_item['quantity'], $buy_now_item['product_image'])) {
+            // buy_now_item đã có warranty_duration từ khi mua ngay
             $cart_items_for_checkout[] = $buy_now_item;
         } else {
             $error_message = "Thông tin sản phẩm 'Mua ngay' không đầy đủ hoặc không hợp lệ. Vui lòng thử lại.";
@@ -124,6 +159,22 @@ else {
         $valid_cart_items = [];
         foreach ($_SESSION['cart'] as $key => $item) {
             if (isset($item['product_id'], $item['product_name'], $item['price'], $item['quantity'], $item['image'])) {
+                // Lấy thông tin bảo hành từ DB cho mỗi sản phẩm trong giỏ hàng (lại một lần nữa nếu cần)
+                $product_id_cart = intval($item['product_id']);
+                $warranty_duration_cart = null;
+                $stmt_warranty = $conn->prepare("SELECT warranty FROM products WHERE id = ?");
+                if ($stmt_warranty) {
+                    $stmt_warranty->bind_param("i", $product_id_cart);
+                    $stmt_warranty->execute();
+                    $result_warranty = $stmt_warranty->get_result();
+                    if ($warranty_data = $result_warranty->fetch_assoc()) {
+                        $warranty_duration_cart = $warranty_data['warranty'];
+                    }
+                    $stmt_warranty->close();
+                } else {
+                    error_log("Failed to prepare statement for product warranty (cart refresh): " . $conn->error);
+                }
+                $item['warranty_duration'] = $warranty_duration_cart; // Thêm warranty_duration vào item
                 $valid_cart_items[$key] = $item;
             } else {
                 error_log("Cart item (refresh) missing data: " . json_encode($item));
@@ -131,6 +182,7 @@ else {
                 // unset($_SESSION['cart'][$key]);
             }
         }
+        $_SESSION['cart'] = $valid_cart_items; // Cập nhật lại session cart
         $cart_items_for_checkout = $valid_cart_items;
 
     }
@@ -162,45 +214,97 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 
     if (empty($full_name) || empty($phone) || empty($address) || empty($city) || empty($district) || empty($payment_method)) {
         $error_message = "Vui lòng điền đầy đủ thông tin bắt buộc.";
-    } elseif (empty($cart_items_for_checkout)) {
+    } elseif (empty($cart_items_for_checkout)) { // Kiểm tra lại giỏ hàng trước khi đặt
         $error_message = "Không có sản phẩm nào trong đơn hàng để thanh toán. Vui lòng thử lại.";
     } else {
         $conn->begin_transaction(); // Bắt đầu giao dịch
 
         try {
             $user_id_for_order = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+            $order_date_created = date('Y-m-d H:i:s'); // Lấy ngày giờ đặt hàng để tính bảo hành
 
-            $stmt = $conn->prepare("INSERT INTO orders (user_id, full_name, phone, email, address, city, district, payment_method, total_price, shipping_fee, final_total, order_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+            $stmt = $conn->prepare("INSERT INTO orders (user_id, full_name, phone, email, address, city, district, payment_method, total_price, shipping_fee, final_total, order_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             if ($stmt === false) {
                 throw new Exception("Lỗi khi chuẩn bị truy vấn đơn hàng: " . $conn->error);
             }
-            $stmt->bind_param("isssssssddd", $user_id_for_order, $full_name, $phone, $email, $address, $city, $district, $payment_method, $total_checkout_price, $shipping_fee, $final_total);
+            // Sửa lỗi: Chuỗi định nghĩa kiểu phải khớp với số lượng biến
+            $stmt->bind_param("isssssssddds", $user_id_for_order, $full_name, $phone, $email, $address, $city, $district, $payment_method, $total_checkout_price, $shipping_fee, $final_total, $order_date_created);
             if (!$stmt->execute()) {
                 throw new Exception("Lỗi khi chèn đơn hàng: " . $stmt->error);
             }
             $order_id = $conn->insert_id;
             $stmt->close();
 
-            $stmt_item = $conn->prepare("INSERT INTO order_items (order_id, product_id, product_name, price, quantity) VALUES (?, ?, ?, ?, ?)");
+            // Prepare statement for order_items
+            // Bổ sung serial_number và warranty_expire_date
+            $stmt_item = $conn->prepare("INSERT INTO order_items (order_id, product_id, product_name, serial_number, price, quantity, warranty_expire_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
             if ($stmt_item === false) {
                 throw new Exception("Lỗi khi chuẩn bị truy vấn chi tiết đơn hàng: " . $conn->error);
             }
 
+            // Lấy user_id, nếu không có thì gán là 'GUEST' để dùng trong serial_number
+            $user_id_for_sn = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'GUEST';
+
             foreach ($cart_items_for_checkout as $item) {
-                // Kiểm tra lại tính tồn tại của các key trước khi sử dụng trong bind_param
                 $product_id_int = intval($item['product_id'] ?? 0);
                 $item_name = htmlspecialchars($item['product_name'] ?? 'Unknown Product');
                 $item_price_float = floatval($item['price'] ?? 0);
                 $item_quantity_int = intval($item['quantity'] ?? 0);
+                $warranty_duration_item = $item['warranty_duration'] ?? null; // Lấy thời hạn bảo hành của sản phẩm
 
-                // Chỉ chèn nếu có đủ thông tin cần thiết
-                if ($product_id_int > 0 && $item_price_float >= 0 && $item_quantity_int > 0) {
-                    $stmt_item->bind_param("iisdi", $order_id, $product_id_int, $item_name, $item_price_float, $item_quantity_int);
-                    if (!$stmt_item->execute()) {
-                        throw new Exception("Lỗi khi chèn sản phẩm vào đơn hàng: " . $stmt_item->error);
+                // Tính toán ngày hết hạn bảo hành cho từng sản phẩm
+                $calculated_warranty_expire_date = null;
+                if (!empty($warranty_duration_item)) {
+                    $warranty_parts = explode(' ', strtolower(trim($warranty_duration_item)));
+                    if (count($warranty_parts) >= 2) {
+                        $value = (int)$warranty_parts[0];
+                        $unit = strtolower($warranty_parts[1]);
+
+                        $date_object = new DateTime($order_date_created); // Tính từ ngày đặt hàng của đơn hàng
+
+                        switch ($unit) {
+                            case 'tháng':
+                            case 'thang':
+                                $date_object->modify("+$value months");
+                                break;
+                            case 'năm':
+                            case 'nam':
+                                $date_object->modify("+$value years");
+                                break;
+                            // Thêm các trường hợp khác nếu có
+                        }
+                        $calculated_warranty_expire_date = $date_object->format('Y-m-d');
                     }
-                } else {
-                    error_log("Skipping invalid order item: " . json_encode($item));
+                }
+
+                // Với mỗi đơn vị sản phẩm trong giỏ hàng, tạo một dòng order_item riêng
+                // để có thể gán serial_number duy nhất cho từng sản phẩm.
+                for ($i = 0; $i < $item_quantity_int; $i++) {
+                    // Tăng bộ đếm cho từng đơn vị sản phẩm của cùng một loại trong đơn hàng này
+                    // Đây là phần quan trọng để tạo ra sự khác biệt cho từng cái vợt
+                    $unit_in_product_index = $i + 1; // Bắt đầu từ 1
+
+                    // Tạo serial_number theo định dạng: USERID-ORDERID-PRODUCTID-UNITINDEX-UNIQID
+                    // Ví dụ: 1-21-3-1-6845d55eb1c16 (User 1, Order 21, Product 3, đơn vị thứ 1, uniqid)
+                    // Ví dụ: 1-21-3-2-6845d55eb1c16 (User 1, Order 21, Product 3, đơn vị thứ 2, uniqid)
+                    $serial_number = $user_id_for_sn . '-' . $order_id . '-' . $product_id_int . '-' . $unit_in_product_index . '-' . uniqid(); 
+                    
+                    // Bind_param cho order_items
+                    // iisdsis (int, int, string, string, double, int, string)
+                    $single_unit_quantity = 1; // Mỗi dòng order_item đại diện cho 1 đơn vị sản phẩm
+                    $stmt_item->bind_param("iisdsis", 
+                        $order_id, 
+                        $product_id_int, 
+                        $item_name, 
+                        $serial_number, 
+                        $item_price_float, 
+                        $single_unit_quantity, 
+                        $calculated_warranty_expire_date
+                    );
+                    
+                    if (!$stmt_item->execute()) {
+                        throw new Exception("Lỗi khi chèn sản phẩm vào đơn hàng (Product ID: {$product_id_int}, SN: {$serial_number}): " . $stmt_item->error);
+                    }
                 }
             }
             $stmt_item->close();
@@ -214,10 +318,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             // Chuyển hướng đến trang xác nhận đơn hàng
             header('Location: chi-tiet-don-hang.php?order_id=' . $order_id);
             exit();
+
         } catch (Exception $e) {
             $conn->rollback(); // Hủy giao dịch nếu có lỗi
             $error_message = "Có lỗi xảy ra khi tạo đơn hàng: " . $e->getMessage();
-            error_log("Lỗi tạo đơn hàng: " . $e->getMessage());
+            error_log("Lỗi tạo đơn hàng: " . $e->getMessage()); // Ghi lỗi vào log hệ thống
         }
     }
 }
@@ -228,7 +333,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Thanh toán</title>
-    <?php include '../includes/header.php'; ?>
+    <?php include '../includes/header.php'; // Đảm bảo đường dẫn đúng ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
@@ -481,3 +586,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     </form>
 </div>
 <?php include '../includes/footer.php'; ?>
+</body>
+</html>
