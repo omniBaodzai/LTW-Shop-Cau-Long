@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Layout</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <style>
+            #khung{
+                background-color: red; width: auto; margin: auto;
+            }
+            /*======================HEADER==============================*/
+            #header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 15px 20px;
+                background:rgb(232, 173, 141);
+                border-bottom: 1px solid #ddd;
+                font-family: Arial, sans-serif;
+                }
+            #header .logo {
+                display: flex;
+                align-items: center;
+                font-weight: bold;
+                font-size: 20px;
+                text-decoration: none;
+                color: #000;
+                }
+            #header .logo img {
+                width: 40px;
+                margin-right: 10px;
+                }
+            /* === Nav === */
+            #header .nav-right {
+                display: flex;
+                justify-content: flex-end; 
+                align-items: center;
+                gap: 20px;
+                }
+            #header .nav-right-list {
+                display: flex; /* li xếp ngang */
+                list-style: none; /* bỏ dấu chấm đầu dòng */
+                padding: 0;
+                margin: 0;
+            }
+            #header .nav-right-item {
+                position: relative;
+            }
+            #header .nav-right-link {
+                display: flex;
+                list-style: none;
+                align-items: center;
+                text-decoration: none; /* bỏ gạch liên kết */
+                color: #000;
+                font-size: 16px;
+                padding: 10px 15px;
+                transition: background-color 0.3s ease;
+            }
+            #header .nav-right-link:hover {
+                color: #00c0ff;
+            }
+            #header .dropdown-menu {
+                position: absolute;
+                top: 100%; /* Hiển thị dưới item */
+                right: 0;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                display: none;      /*mặc đinh ẩn menu*/
+                min-width: 200px;
+                z-index: 1000; /* Ưu tiên hiển thị trên các phần tử khác */
+                padding: 10px 0;
+                list-style: none; /* bỏ dấu chấm đầu dòng */
+            }
+            #header .dropdown-menu a {
+                display: block;
+                padding: 10px 20px;
+                color: #333;
+                text-decoration: none;
+                transition: background 0.2s ease;
+            }
+            #header .dropdown-menu a:hover {
+                background-color: #f1f1f1;
+                color: #00c0ff;
+            }
+            #header .cart-dropdown {
+                text-align: center;
+                padding: 20px;
+            }
+            #header .cart-icon {
+                font-size: 24px;
+                color: #00c0ff;
+            }
+            /* --------Search Box --------- */
+            #header .search-box {
+                display: flex;
+                align-items: center;
+                border-radius: 999px;
+                background: #1e2235;
+                padding: 6px 14px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                max-width: 400px;
+                width: 100%;
+                }
+            #header .search-box input {
+                flex: 1; /* mở rộng kính theo không gian còn lại */
+                border: none;
+                outline: none;
+                padding: 8px 10px;
+                background: transparent;
+                color: #fff;
+                font-size: 14px;
+                width: 180px;
+                transition: all 0.3s ease;
+                }
+            #header .search-box input::placeholder {
+                color: #aaa;
+                }
+            #header .search-box i {
+                font-size: 20px;
+                color: #fff;
+                cursor: pointer;
+                transition: transform 0.2s ease;
+                }
+            #header .search-box i:hover {
+                transform: scale(1.2);
+                }
+            /* Responsive: thu gọn thành kính lúp */
+            @media (max-width: 768px) {
+                #header .search-box {
+                    width: 40px;
+                    padding: 6px;
+                    justify-content: center;
+                }
+
+                #header .search-box input {
+                    width: 0;
+                    padding: 0;
+                    opacity: 0;
+                    pointer-events: none;
+                }
+            }
+
+            /*======================BANNER==============================*/
+            #Banner{
+                background-color: yellow; width: 1200px; margin: auto;
+            }
+            #Content{
+                background-color: pink; width: 900px; margin: auto;min-height: 500px;
+            }
+            /*======================FOOTER==============================*/
+            * {
+                box-sizing: border-box; /*Thiết lập box-sizing cho tất cả các phần tử*/
+                margin: 0; 
+                padding: 0; 
+                }
+            #footer {background-color: #222;
+                color: #eee;
+                padding: 40px 0 20px;
+                font-size: 14px;
+                }
+            #footer a {
+                color: #ccc;
+                text-decoration: none;
+                padding: 5px 0;
+                transition: color 0.3s ease;
+                }
+            #footer a:hover, a:focus {
+                color: #bf3e00;
+                }
+            #footer .container {
+                width: 90%;
+                max-width: 1200px;
+                margin: 0 auto;
+                }
+            #footer .row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                }
+            #footer .col {
+                flex: 1 1 220px; /* tự co giãn, tối thiểu 220px */
+                min-width: 220px;
+                }
+            #footer .col h3 {
+                font-size: 16px;
+                color: #ff6600;
+                margin-bottom: 15px;
+                padding-bottom: 5px;
+                }
+            #footer ul {
+                list-style: none;
+                }
+            #footer ul li {  
+                margin-bottom: 10px;
+                }
+            #footer .col p {
+                margin-bottom: 12px;
+                }
+            #footer .copyright {
+                background-color:  #e95211;
+                padding: 20px 0;
+                margin-top: 30px;
+                font-size: 13px;
+                color:rgb(255, 255, 255);
+                text-align: center;
+                }
+            #footer .copyright a img {
+                vertical-align: middle;
+                margin-top: 5px;
+                }
+            
+            Responsive nhỏ hơn 768px 
+            @media (max-width: 768px) {
+                #footer .row {
+                    flex-direction: column;
+                }
+                #footer .col {
+                    min-width: 100%;
+                }
+                }
+            
+        </style>
+    </head>
+    <body>
+        <div id="khung">
+            <div id="header">
+                  <!-- Logo -->
+                    <a href="index.html" class="logo">
+                    <img src="Badminton2.jpg" alt="Logo Yêu Cầu Lông" />
+                    YeuCauLong</a>
+
+                    <!-- Search Bar -->
+                    <div class="search-box">
+                    <input type="text" placeholder="Tìm kiếm sản phẩm..." />
+                    <i class="ri-search-line"></i>
+                    </div>
+
+                    <!-- Navigation Right -->
+                    <nav class="nav-right">
+                    <ul class="nav-right-list">
+                        <!-- Tài khoản -->
+                        <li class="nav-right-item dropdown">
+                        <a href="#" class="nav-right-link">
+                            <i class="ri-user-line"></i> Tài khoản <i class="ri-arrow-down-s-line dropdown-arrow"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./pages/dang-ky.html"><i class="ri-user-add-line"></i> Đăng ký</a></li>
+                            <li><a href="./pages/dang-nhap.html"><i class="ri-login-box-line"></i> Đăng nhập</a></li>
+                        </ul>
+                        </li>
+
+                        <!-- Giỏ hàng -->
+                        <li class="nav-right-item dropdown">
+                        <a href="#" class="nav-right-link">
+                            <i class="ri-shopping-cart-line"></i> Giỏ hàng <i class="ri-arrow-down-s-line dropdown-arrow"></i>
+                        </a>
+                        <div class="dropdown-menu cart-dropdown">
+                            <i class="ri-shopping-bag-3-line cart-icon"></i>
+                            <p class="empty-cart-msg">Không có sản phẩm trong giỏ hàng</p>
+                        </div>
+                        </li>
+
+                        <!-- Tra cứu đơn hàng -->
+                        <li class="nav-right-item dropdown">
+                        <a href="#" class="nav-right-link">
+                            <i class="ri-file-list-3-line"></i> Tra cứu đơn <i class="ri-arrow-down-s-line dropdown-arrow"></i>
+                        </a>
+                        <ul class="dropdown-menu order-dropdown">
+                            <li><a href="#"><i class="ri-search-eye-line"></i> Kiểm tra đơn</a></li>
+                            <li><a href="#"><i class="ri-tools-line"></i> Bảo hành</a></li>
+                        </ul>
+                        </li>
+                    </ul>
+                    </nav>
+
+
+            </div>
+            <div id="Banner">
+                banner
+            </div>
+            <div id="Content">
+                Content
+            </div>
+            <div id="footer">
+                
+                <div class="container">
+                    <div class="row">
+                        <!-- Thông tin chung -->
+                        <div class="col">
+                            <h3>THÔNG TIN CHUNG</h3>
+                            <p><strong>VN Sports</strong> là hệ thống cửa hàng cầu lông với hơn nhiều chi nhánh trên toàn quốc, cung cấp sỉ và lẻ các mặt hàng dụng cụ cầu lông từ phong trào tới chuyên nghiệp.</p>
+                            <p><strong>Sứ mệnh của VN Sports</strong> <em>"  là đồng hành cùng người chơi thể thao bằng những sản phẩm và dịch vụ tốt nhất, giúp họ nâng cao sức khỏe và chinh phục giới hạn bản thân."</em></p>
+                            <p><strong>Tầm nhìn:</strong> <em>"Dẫn đầu xu hướng thể thao vì sức khỏe và phong cách sống bền vững tại Việt Nam."</em></p>
+                        </div>
+
+                        <!-- Thông tin liên hệ -->
+                        <div class="col">
+                            <h3>THÔNG TIN LIÊN HỆ</h3>
+                            <p><strong>Hệ thống cửa hàng:</strong> <a href="#">1 Super Center, 5 shop Premium và 71 cửa hàng</a> trên toàn quốc</p>
+                            <p><a href="#" style="color:#e95211; font-weight:bold;">Xem tất cả các cửa hàng VN</a></p>
+                            <p><strong>Hotline:</strong> <a href="#">0977508430</a> | <a href="tel:0338000308">0338000308</a></p>
+                            <p><strong>Email:</strong> <a href="#">info@shopvnsport.com</a></p>
+                            <p><strong>Hợp tác kinh doanh:</strong> <a href="#">0366612920 (Ms. Nguyên)</a></p>
+                            <p><strong>Hotline bán sỉ:</strong> <a href="#">0911 105 211</a></p>
+                            <p><strong>Nhượng quyền thương hiệu:</strong> <a href="#">0842413345 (Mr. Tâm)</a></p>
+                            <p><strong>Than phiền dịch vụ:</strong> <a href="#">0844511205 (Ms. Uyển)</a></p>
+
+                            <!-- Mạng xã hội -->
+                            <div class="footer-social">
+                                <a href="#"><i class="ri-facebook-circle-fill"></i></a> |
+                                <a href="#"><i class="ri-youtube-fill"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- Chính sách -->
+                        <div class="col">
+                            <h3>CHÍNH SÁCH</h3>
+                            <ul>
+                                <li><a href="/thong-tin-ve-van-chuyen-va-giao-nhan.html">Thông tin về vận chuyển và giao nhận</a></li>
+                                <li><a href="/chinh-sach-doi-tra-hoan-tien.html">Chính sách đổi trả, hoàn tiền</a></li>
+                                <li><a href="/chinh-sach-bao-hanh.html">Chính sách bảo hành</a></li>
+                                <li><a href="/chinh-sach-xu-ly-khieu-nai.html">Chính sách xử lý khiếu nại</a></li>
+                                <li><a href="/chinh-sach-van-chuyen.html">Chính sách vận chuyển</a></li>
+                                <li><a href="/dieu-khoan-su-dung.html">Điều khoản sử dụng</a></li>
+                                <li><a href="/chinh-sach-bao-mat.html">Chính sách bảo mật thông tin</a></li>
+                                <li><a href="/chinh-sach-nhuong-quyen-shopvnb.html">Chính sách nhượng quyền</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Hướng dẫn -->
+                        <div class="col">
+                            <h3>HƯỚNG DẪN</h3>
+                            <ul>
+                                <li><a href="/huong-dan-mua-hang-online.html">Hướng dẫn mua hàng online</a></li>
+                                <li><a href="/huong-dan-cach-chon-vot-cau-long-cho-nguoi-moi-choi.html">Hướng dẫn cách chọn vợt cầu lông</a></li>
+                                <li><a href="/huong-dan-thanh-toan.html">Hướng dẫn thanh toán</a></li>
+                                <li><a href="/kiem-tra-bao-hanh.html">Kiểm tra bảo hành</a></li>
+                                <li><a href="/kiem-tra-don-hang.html">Kiểm tra đơn hàng</a></li>
+                                <li><a href="/huong-dan-su-dung-website.html">Hướng dẫn sử dụng website</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="copyright">
+                    <div class="container">
+                        <p>
+                            Công ty VN SPORTS<br />
+                            Địa chỉ: 390/2 Hà Huy Giáp, Phường Thạnh Lộc, Quận 12, TPHCM<br />
+                            Email: info@shopvn.com<br />
+                            GPKD số 0314496879 do Sở KH và ĐT TP Hồ Chí Minh cấp ngày 00/00/2025<br />
+                            Giám đốc/Sở hữu website: <br />
+                            <a href="http://online.gov.vn/Home/WebDetails/126877" target="_blank" title="Đã đăng ký bộ công thương">
+                                <img src="https://cdn.shopvnb.com/themes_new/images/bct.webp" alt="Đã đăng ký bộ công thương" style="max-width:120px;">
+                            </a>
+                        </p>
+                    </div>
+                </div>                
+                    </div>
+                </div>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+            const dropdownItems = document.querySelectorAll("#header .nav-right-item");
+
+            dropdownItems.forEach((item) => {
+                const menu = item.querySelector(".dropdown-menu");
+
+                item.addEventListener("mouseenter", function () {
+                // Hiển thị menu khi rê chuột vào
+                if (menu) {
+                    menu.style.display = "block";
+                }
+                });
+
+                item.addEventListener("mouseleave", function () {
+                // Ẩn menu khi rê chuột ra
+                if (menu) {
+                    menu.style.display = "none";
+                }
+                });
+            });
+            });
+            document.addEventListener("DOMContentLoaded", function () {
+            const searchBox = document.querySelector(".search-box");
+            const input = searchBox.querySelector("input");
+            const icon = searchBox.querySelector("i");
+
+            icon.addEventListener("click", function () {
+                // Chỉ xử lý ở mobile
+                if (window.innerWidth <= 768) {
+                if (input.style.width === "0px" || input.style.opacity === "0") {
+                    input.style.width = "150px";
+                    input.style.padding = "8px";
+                    input.style.opacity = "1";
+                    input.style.pointerEvents = "auto";
+                    searchBox.style.width = "200px";
+                } else {
+                    input.style.width = "0";
+                    input.style.padding = "0";
+                    input.style.opacity = "0";
+                    input.style.pointerEvents = "none";
+                    searchBox.style.width = "40px";
+                }
+                }
+            });
+            });
+</script>
+
+
+    </body>
+</html>
