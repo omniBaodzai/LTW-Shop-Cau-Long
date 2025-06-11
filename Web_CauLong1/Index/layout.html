@@ -23,7 +23,7 @@
                 align-items: center;
                 justify-content: space-between;
                 padding: 15px 20px;
-                background:rgb(232, 173, 141);
+                background:rgb(228, 193, 174);
                 border-bottom: 1px solid #ddd;
                 font-family: Arial, sans-serif;
                 }
@@ -105,10 +105,10 @@
                 display: flex;
                 align-items: center;
                 border-radius: 999px;
-                background: #1e2235;
+                background:rgb(82, 91, 136);
                 padding: 6px 14px;
                 transition: all 0.3s ease;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 2px 8px rgb(65, 49, 49);
                 max-width: 400px;
                 width: 100%;
                 }
@@ -151,13 +151,183 @@
                 }
             }
 
+            /*======================SLIDE==============================*/
+            #Slide{
+                background-color: yellow; width: 100%; margin: auto;
+            }
+            #Slide .banner-carousel {
+                position: relative;
+                max-width: 100%;
+                overflow: hidden;
+                }
+            #Slide .banner-carousel .slide {
+                display: none;
+                text-align: center;
+                }
+            #Slide .banner-carousel .slide img {
+                width: 100%;
+                height: 450px;
+                display: block;
+                }
+            #Slide .banner-carousel .slide.active {
+                display: block;
+                }
             /*======================BANNER==============================*/
             #Banner{
-                background-color: yellow; width: 1200px; margin: auto;
+                background-color:rgb(192, 215, 65); width: 1200px; margin: auto; padding: auto;
             }
+            .feature-box {
+                flex: 1;
+                background: #fff;
+                border-radius: 22px;
+                box-shadow: 0 2px 12px 0 rgba(230, 57, 70, 0.10), 0 1px 0 #e63946;
+                padding: 16px 8px 12px 8px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                transition: box-shadow 0.3s, transform 0.3s, border 0.3s, background 0.3s;
+                border: 1.5px solid #ffd166;
+                position: relative;
+                overflow: hidden;
+                min-width: 0;
+                min-height: 120px;
+                margin: 0 auto;
+                background: linear-gradient(135deg, #fff 80%, #fffbe6 100%);
+            }
+            .feature-box:hover {
+                box-shadow: 0 8px 32px 0 rgba(230, 57, 70, 0.18), 0 2px 0 #ffd166;
+                border: 1.5px solid #e63946;
+                background: linear-gradient(135deg, #fffbe6 60%, #ffe5e5 100%);
+                transform: translateY(-4px) scale(1.04);
+            }
+            .feature-icon {
+                font-size: 36px;
+                color: #ef476f;
+                margin-bottom: 10px;
+            }
+            .main-features-container {
+                max-width: 1100px;
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                gap: 16px;
+                padding: 0 16px;
+            }
+            .main-features {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                background-color: #f4f4f4;
+                padding: 32px 0 24px 0;
+                margin: 0;
+                position: relative;
+                z-index: 10;
+            }
+            /*======================Content==============================*/
             #Content{
-                background-color: pink; width: 900px; margin: auto;min-height: 500px;
+                background-color: pink; width: 1200px; margin: auto; min-height: 500px;
+                overflow: hidden; /* quan trọng để float không bị vỡ khối */
             }
+            .section-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: #f0f0f0;
+                padding: 15px;
+                border: 1px solid rgb(177, 173, 173);
+                margin: 2px 0;
+            }
+
+            .section-header h3 {
+                margin: 0;
+                font-size: 20px;
+            }
+
+            .section-header .tabs {
+                list-style: none;
+                display: flex;
+                gap: 15px;
+                padding: 0;
+                margin: 0;
+            }
+
+            .section-header .tabs li a {
+                text-decoration: none;
+                color: #333;
+                font-weight: bold;
+                
+            }
+
+            .section-header .tabs li a.active {
+                color: red;
+            }
+
+            #left {
+                background-color: #F63;
+                width: 250px;
+                height: 500px;
+                float: left;
+                color: #FFFFFF;
+                display: block;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                font-weight: bold;
+            }
+            #left ul {
+                list-style-type: square;
+                padding-left: 20px;
+                margin-top: 10px;
+            }
+            #right {
+                background-color:rgb(28, 208, 49);
+                width: 950px;
+                height: 500px;
+                float: right;
+                color: #FFFFFF;
+                display: block;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                font-weight: bold;
+            }
+            .product-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 12px; 
+                padding: 10px;
+                }
+
+            .product {
+                background: #fff;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                text-align: center;
+                padding: 10px;
+                transition: box-shadow 0.3s ease;
+                }
+
+                .product:hover {
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+                transform: translateY(-8px);
+                }
+
+                .product img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 4px;
+                }
+
+                .product h4 {
+                font-size: 14px;
+                margin: 10px 0 ;
+                color: #333;
+                text-decoration: none; /* bỏ gạch liên kết */
+                }
+
+                .product p {
+                color: #e60000;
+                font-weight: bold;
+                }
+
             /*======================FOOTER==============================*/
             * {
                 box-sizing: border-box; /*Thiết lập box-sizing cho tất cả các phần tử*/
@@ -237,7 +407,7 @@
             <div id="header">
                   <!-- Logo -->
                     <a href="index.html" class="logo">
-                    <img src="Badminton2.jpg" alt="Logo Yêu Cầu Lông" />
+                    <img src="../Picture/Logo.jpg" alt="Logo Yêu Cầu Lông" />
                     YeuCauLong</a>
 
                     <!-- Search Bar -->
@@ -284,14 +454,265 @@
                     </ul>
                     </nav>
 
-
+            </div>
+            <div id="Slide">
+                <!-- Slide Carousel (tối giản) -->
+                    <div class="banner-carousel">
+                    <div class="slide">
+                        <a href="#" target="_blank">
+                        <img src="../Picture/slide1.jpg" alt="Vợt cầu lông">
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a href="#" target="_blank">
+                        <img src="../Picture/slide2.jpg" alt="Qủa cầu lông">
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a href="#" target="_blank">
+                        <img src="../Picture/slide4.jpg" alt="Túi cầu lông">
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a href="#" target="_blank">
+                        <img src="../Picture/slide3.jpg" alt="Giày cầu lông">
+                        </a>
+                    </div>
+                    </div>
             </div>
             <div id="Banner">
-                banner
+                 <section class="main-features">
+                    <div class="main-features-container">
+                    <div class="feature-box">
+                        <div class="feature-icon"><i class="ri-truck-line"></i></div>
+                        <div class="feature-title">Vận chuyển <span>TOÀN QUỐC</span></div>
+                        <div class="feature-desc">Thanh toán khi nhận hàng</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon"><i class="ri-shield-check-line"></i></div>
+                        <div class="feature-title">Bảo đảm <span>CHẤT LƯỢNG</span></div>
+                        <div class="feature-desc">Sản phẩm bảo đảm chất lượng.</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon"><i class="ri-bank-card-line"></i></div>
+                        <div class="feature-title">Tiến hành <span>THANH TOÁN</span></div>
+                        <div class="feature-desc">Với nhiều <span>PHƯƠNG THỨC</span></div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon"><i class="ri-refresh-line"></i></div>
+                        <div class="feature-title">Đổi sản phẩm <span>MỚI</span></div>
+                        <div class="feature-desc">nếu sản phẩm lỗi</div>
+                    </div>
+                    </div>
+                </section>
+
             </div>
+    <!-- __________________________Content VỢT CẦU LÔNG _______________________ -->        
+            <div id="Banner">
+                <div class="banner-ads" style="text-align: center;">
+                <a href="#" target="_blank">
+                    <img src="../Picture/slide1.jpg" alt="Quảng cáo vợt cầu lông" style="max-width: 100%; height: auto; border-radius: 5px;">
+                </a>
+                </div>
+            </div>
+
             <div id="Content">
-                Content
+                <div class="section-header">
+                    <h3>VỢT CẦU LÔNG</h3>
+                    <ul class="tabs">
+                        <li><a href="#">Mới nhất</a></li>
+                        <li><a href="#" class="active">Bán chạy</a></li>
+                        <li><a href="#">Xem tất cả</a></li>
+                    </ul>
+                </div>
+
+                <div id="left">
+                    Content1
+                </div>
+                <div id="right">
+                    <div class="product-grid">
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-xanh">
+                        <img src="https://dasxsport.vn/storage/day/dsc06527-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Xanh trắng">
+                        <h4>Xstorm Trẻ Em Copa Icon - Xanh trắng</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-2">
+                        <img src="https://dasxsport.vn/storage/day/dsc06510-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Trắng đen cam">
+                        <h4>Xstorm Trẻ Em Copa Icon - Trắng đen cam</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-trang-do-den-1">
+                        <img src="https://dasxsport.vn/storage/day/dsc06495-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Trắng xanh đen">
+                        <h4>Xstorm Trẻ Em Copa Icon - Trắng xanh đen</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-xanh">
+                        <img src="https://dasxsport.vn/storage/day/dsc06527-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Xanh trắng">
+                        <h4>Xstorm Trẻ Em Copa Icon - Xanh trắng</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-xanh">
+                        <img src="https://dasxsport.vn/storage/day/dsc06527-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Xanh trắng">
+                        <h4>Xstorm Trẻ Em Copa Icon - Xanh trắng</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <!-- Lặp tương tự cho các sản phẩm còn lại -->
+                    </div>
+                </div>
             </div>
+
+    <!-- __________________________Content TÚI cầu lông _______________________ -->        
+            <div id="Banner">
+                <div class="banner-ads" style="text-align: center;">
+                <a href="#" target="_blank">
+                    <img src="../Picture/slide4.jpg" alt="Quảng cáo vợt cầu lông" style="max-width: 100%; height: auto; border-radius: 5px;">
+                </a>
+                </div>
+            </div>
+
+            <div id="Content">
+                <div class="section-header">
+                    <h3>TÚI CẦU LÔNG</h3>
+                    <ul class="tabs">
+                        <li><a href="#">Mới nhất</a></li>
+                        <li><a href="#" class="active">Bán chạy</a></li>
+                        <li><a href="#">Xem tất cả</a></li>
+                    </ul>
+                </div>
+
+                <div id="left">
+                    Content1
+                </div>
+                <div id="right">
+                    <div class="product-grid">
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-xanh">
+                        <img src="https://dasxsport.vn/storage/day/dsc06527-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Xanh trắng">
+                        <h4>Xstorm Trẻ Em Copa Icon - Xanh trắng</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-2">
+                        <img src="https://dasxsport.vn/storage/day/dsc06510-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Trắng đen cam">
+                        <h4>Xstorm Trẻ Em Copa Icon - Trắng đen cam</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-trang-do-den-1">
+                        <img src="https://dasxsport.vn/storage/day/dsc06495-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Trắng xanh đen">
+                        <h4>Xstorm Trẻ Em Copa Icon - Trắng xanh đen</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-xanh">
+                        <img src="https://dasxsport.vn/storage/day/dsc06527-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Xanh trắng">
+                        <h4>Xstorm Trẻ Em Copa Icon - Xanh trắng</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-xanh">
+                        <img src="https://dasxsport.vn/storage/day/dsc06527-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Xanh trắng">
+                        <h4>Xstorm Trẻ Em Copa Icon - Xanh trắng</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <!-- Lặp tương tự cho các sản phẩm còn lại -->
+                    </div>
+                </div>
+            </div>
+    <!-- __________________________Content giày cầu lông _______________________ -->        
+            <div id="Banner">
+                <div class="banner-ads" style="text-align: center;">
+                <a href="#" target="_blank">
+                    <img src="../Picture/slide3.jpg" alt="Quảng cáo vợt cầu lông" style="max-width: 100%; height: auto; border-radius: 5px;">
+                </a>
+                </div>
+            </div>
+
+            <div id="Content">
+                <div class="section-header">
+                    <h3>GIÀY CẦU LÔNG</h3>
+                    <ul class="tabs">
+                        <li><a href="#">Mới nhất</a></li>
+                        <li><a href="#" class="active">Bán chạy</a></li>
+                        <li><a href="#">Xem tất cả</a></li>
+                    </ul>
+                </div>
+
+                <div id="left">
+                    Content1
+                </div>
+                <div id="right">
+                    <div class="product-grid">
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-xanh">
+                        <img src="https://dasxsport.vn/storage/day/dsc06527-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Xanh trắng">
+                        <h4>Xstorm Trẻ Em Copa Icon - Xanh trắng</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-2">
+                        <img src="https://dasxsport.vn/storage/day/dsc06510-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Trắng đen cam">
+                        <h4>Xstorm Trẻ Em Copa Icon - Trắng đen cam</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-trang-do-den-1">
+                        <img src="https://dasxsport.vn/storage/day/dsc06495-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Trắng xanh đen">
+                        <h4>Xstorm Trẻ Em Copa Icon - Trắng xanh đen</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-xanh">
+                        <img src="https://dasxsport.vn/storage/day/dsc06527-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Xanh trắng">
+                        <h4>Xstorm Trẻ Em Copa Icon - Xanh trắng</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <div class="product">
+                        <a href="https://dasxsport.vn/san-pham/xstorm-tre-em-copa-icon-xanh">
+                        <img src="https://dasxsport.vn/storage/day/dsc06527-min.jpg" alt="Xstorm Trẻ Em Copa Icon - Xanh trắng">
+                        <h4>Xstorm Trẻ Em Copa Icon - Xanh trắng</h4>
+                        <p>280.000₫</p>
+                        </a>
+                    </div>
+
+                    <!-- Lặp tương tự cho các sản phẩm còn lại -->
+                    </div>
+                </div>
+            </div>
+
             <div id="footer">
                 
                 <div class="container">
@@ -361,8 +782,8 @@
                             Email: info@shopvn.com<br />
                             GPKD số 0314496879 do Sở KH và ĐT TP Hồ Chí Minh cấp ngày 00/00/2025<br />
                             Giám đốc/Sở hữu website: <br />
-                            <a href="http://online.gov.vn/Home/WebDetails/126877" target="_blank" title="Đã đăng ký bộ công thương">
-                                <img src="https://cdn.shopvnb.com/themes_new/images/bct.webp" alt="Đã đăng ký bộ công thương" style="max-width:120px;">
+                            <a href="#" target="_blank" title="Đã đăng ký bộ công thương">
+                                <img src="#" alt="Đã đăng ký bộ công thương" style="max-width:120px;">
                             </a>
                         </p>
                     </div>
@@ -416,7 +837,25 @@
                 }
             });
             });
-</script>
+
+            // Banner Carousel
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.banner-carousel .slide');
+
+            function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            }
+
+            function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+            }
+
+            showSlide(currentSlide);
+            setInterval(nextSlide, 3000); // Chuyển slide mỗi 3 giây
+    </script>
 
 
     </body>
