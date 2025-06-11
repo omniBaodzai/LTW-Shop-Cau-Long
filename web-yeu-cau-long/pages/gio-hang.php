@@ -3,6 +3,12 @@
 session_start(); // Bắt đầu session. Đảm bảo đây là dòng đầu tiên trong file.
 include '../connect.php'; // Kết nối cơ sở dữ liệu.
 
+if (!isset($_SESSION['user_id'])) {
+    // Tùy chọn: Lưu thông báo để hiển thị sau khi chuyển hướng
+    $_SESSION['message'] = 'Vui lòng đăng nhập để tiến hành thanh toán.';
+    header('Location: ../pages/dang-nhap.php'); // Thay đổi thành đường dẫn tới trang đăng nhập của bạn
+    exit();
+}
 // Kiểm tra xem giỏ hàng đã được khởi tạo trong session chưa
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];

@@ -2,6 +2,13 @@
 session_start(); // Bắt đầu session
 include '../connect.php'; // Kết nối cơ sở dữ liệu
 
+if (!isset($_SESSION['user_id'])) {
+    // Tùy chọn: Lưu thông báo để hiển thị sau khi chuyển hướng
+    $_SESSION['message'] = 'Vui lòng đăng nhập để tiến hành thanh toán.';
+    header('Location: ../pages/dang-nhap.php'); // Thay đổi thành đường dẫn tới trang đăng nhập của bạn
+    exit();
+}
+
 $cart_items_for_checkout = [];
 $total_checkout_price = 0;
 $shipping_fee = 30000; // Phí vận chuyển cố định

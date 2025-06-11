@@ -1,6 +1,12 @@
 <?php
 include '../connect.php'; // Kết nối cơ sở dữ liệu (đảm bảo đường dẫn đúng)
 
+if (!isset($_SESSION['user_id'])) {
+    // Tùy chọn: Lưu thông báo để hiển thị sau khi chuyển hướng
+    $_SESSION['message'] = 'Vui lòng đăng nhập để tiến hành thanh toán.';
+    header('Location: ../pages/dang-nhap.php'); // Thay đổi thành đường dẫn tới trang đăng nhập của bạn
+    exit();
+}
 $order_items_info = []; // Biến để lưu thông tin các sản phẩm trong đơn hàng
 $order_info = null;     // Biến để lưu thông tin chung của đơn hàng
 $error_message = '';    // Biến để lưu thông báo lỗi

@@ -134,18 +134,7 @@ $conn->close();
 <link rel="stylesheet" href="../assets/css/style.css">
 <style>
     /* Tổng quan */
-    body {
-        font-family: 'Open Sans', Arial, sans-serif; /* Font hiện đại hơn */
-        background: linear-gradient(135deg, #f0f4f8 0%, #e0e7ee 100%); /* Nền gradient nhẹ */
-        color: #333;
-        line-height: 1.6;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        margin: 0;
-        padding-top: 20px; /* Thêm padding trên để container không sát đỉnh */
-        padding-bottom: 20px;
-    }
+    
 
     .member-main {
         flex-grow: 1; /* Để main chiếm hết chiều cao còn lại */

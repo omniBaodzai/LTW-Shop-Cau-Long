@@ -179,7 +179,7 @@ if ($result && $result->num_rows > 0) {
                     <div class="badminton-item">
                         <div class="badminton-imgbox">
                             <a href="../pages/chi-tiet-san-pham.php?id=<?= $p['id'] ?>">
-                                <img src="../assets/img/product/<?= $p['img'] ?>" alt="<?= $p['name'] ?>">
+                                <img src="<?= $p['img'] ?>" alt="<?= $p['name'] ?>">
                                 <span class="badminton-badge">Premium</span>
                             </a>
                         </div>
